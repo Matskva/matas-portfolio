@@ -92,12 +92,14 @@ const works = [
    Drop a JPG for each at assets/img-new-0X.jpg and it is included on both
    pages automatically (size/year/price are placeholders to confirm). */
 const newWorks = [
-  { img: "new-01", num: "012", concept: "Recent work, red figures massed against a field of cobalt.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-02", num: "013", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-03", num: "014", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-04", num: "015", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-05", num: "016", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-01", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-02", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-03", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-04", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-05", concept: "A luminous masked form suspended in a deep field of blue, scratched through with cooler light.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
 ].filter((w) => fs.existsSync(path.join(__dirname, "assets/img-" + w.img + ".jpg")));
+// number them sequentially after the existing catalogue (…011, 012, 013)
+newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
 works.push(...newWorks);
 
 /* read width/height straight from a JPEG so masonry columns balance */
