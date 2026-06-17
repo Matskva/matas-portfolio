@@ -6,6 +6,10 @@ const path = require("path");
 const A = (id) => `assets/img-${id}.jpg`;
 const VER = Date.now().toString(36);   // cache-bust css/js on every build
 
+// Projects is hidden for now — flip to true to bring back the tab, page,
+// hero link and home section.
+const SHOW_PROJECTS = false;
+
 /* ---- projects (non-art design work, placeholder) ---------------------- */
 const projects = [
   { n: "01", title: "Nocturne",   cat: "Brand Identity",     year: "2024", status: "Case study soon" },
@@ -165,7 +169,7 @@ const header = (page) => `<header class="site-head${page==="home"?" autohide":""
   <a class="brand" href="index.html">Matas<span class="dot">.</span></a>
   <nav class="nav" aria-label="Primary">
     <a href="art.html"${page==="art"?' aria-current="page"':""}>Fine&nbsp;Art</a>
-    <a href="projects.html"${page==="projects"?' aria-current="page"':""}>Projects</a>
+    ${SHOW_PROJECTS?`<a href="projects.html"${page==="projects"?' aria-current="page"':""}>Projects</a>`:""}
     <a href="mailto:matas@mail.com">Contact</a>
     ${page==="art"||page==="projects"?'<a href="index.html">Back</a>':""}
   </nav>
@@ -219,7 +223,7 @@ ${header("home")}
         <div class="hero-foot load l3">
           <nav class="hero-nav" aria-label="Sections">
             <a href="art.html">fine&nbsp;art.</a>
-            <a href="projects.html">projects.</a>
+            ${SHOW_PROJECTS?`<a href="projects.html">projects.</a>`:""}
             <a href="mailto:matas@mail.com">contact&nbsp;me.</a>
           </nav>
           <div>
@@ -249,7 +253,7 @@ ${header("home")}
     </div>
   </section>
 
-  <section class="projects-block" id="projects">
+  ${SHOW_PROJECTS?`<section class="projects-block" id="projects">
     <div class="wrap">
       <div class="section-head reveal">
         <div>
@@ -269,7 +273,7 @@ ${header("home")}
       </div>
     </div>
     <div class="wrap"><p class="proj-hint reveal">Drag or scroll sideways to explore</p></div>
-  </section>
+  </section>`:""}
 </main>
 ${footer()}
 <script src="script.js?v=${VER}"></script>
@@ -358,7 +362,10 @@ ${footer()}
 
 fs.writeFileSync(path.join(__dirname, "index.html"), indexHTML);
 fs.writeFileSync(path.join(__dirname, "art.html"), artHTML);
-fs.writeFileSync(path.join(__dirname, "projects.html"), projectsHTML);
-// jewelry was replaced by projects
+if (SHOW_PROJECTS) {
+  fs.writeFileSync(path.join(__dirname, "projects.html"), projectsHTML);
+} else {
+  try { fs.unlinkSync(path.join(__dirname, "projects.html")); } catch (e) {}
+}
 try { fs.unlinkSync(path.join(__dirname, "jewelry.html")); } catch (e) {}
-console.log("Wrote index.html, art.html and projects.html");
+console.log("Wrote index.html, art.html" + (SHOW_PROJECTS ? " and projects.html" : " (projects hidden)"));
