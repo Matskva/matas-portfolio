@@ -101,6 +101,8 @@ const newWorks = [
   { img: "new-03", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-04", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-05", concept: "A luminous masked form suspended in a deep field of blue, scratched through with cooler light.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-06", concept: "A face surfacing from a dark mantle, set against a bruised expanse of purple and grey.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-07", concept: "A spectral figure dissolving into grey, pierced by red, staring forms.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
 ].filter((w) => fs.existsSync(path.join(__dirname, "assets/img-" + w.img + ".jpg")));
 // number them sequentially after the existing catalogue (…011, 012, 013)
 newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
