@@ -591,6 +591,8 @@ body.lb-open { overflow: hidden; }
 .price { font-family: var(--display); font-weight: 700; font-stretch: 110%; }
 .price.sold { color: var(--faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; font-stretch: 100%; }
 .price.avail { color: var(--accent); }
+a.price.avail { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a.price.avail:hover { text-decoration-thickness: 2px; }
 
 /* =========================================================================
    Footer

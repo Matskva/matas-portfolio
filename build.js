@@ -100,13 +100,19 @@ const newWorks = [
   { img: "new-02", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-03", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-04", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-05", concept: "A luminous masked form suspended in a deep field of blue, scratched through with cooler light.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-06", concept: "A face surfacing from a dark mantle, set against a bruised expanse of purple and grey.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-07", concept: "A spectral figure dissolving into grey, pierced by red, staring forms.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
+  { img: "new-05", concept: "A luminous masked form suspended in a deep field of blue, scratched through with cooler light.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "unavailable" },
+  { img: "new-06", concept: "A face surfacing from a dark mantle, set against a bruised expanse of purple and grey.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2026", price: "Price on request" },
+  { img: "new-07", concept: "A spectral figure dissolving into grey, pierced by red, staring forms.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2026", price: "Price on request" },
 ].filter((w) => fs.existsSync(path.join(__dirname, "assets/img-" + w.img + ".jpg")));
 // number them sequentially after the existing catalogue (…011, 012, 013)
 newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
 works.push(...newWorks);
+
+/* catalogue page order: newest first (by year, then work number) */
+const catalogue = [...works].sort((a, b) => (b.year - a.year) || (parseFloat(b.num) - parseFloat(a.num)));
+
+const allYears = works.map((w) => +w.year);
+const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
 
 /* read width/height straight from a JPEG so masonry columns balance */
 function jpegRatio(rel) {
@@ -197,7 +203,7 @@ const footer = () => `<footer class="foot reveal">
 
 const priceMarkup = (p) => p === "unavailable"
   ? `<span class="price sold">Unavailable</span>`
-  : `<span class="price avail">${p}</span>`;
+  : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
 
 /* rotating circular badge (text on a circle) */
 const badge = `<div class="badge" aria-hidden="true">
@@ -208,7 +214,7 @@ const badge = `<div class="badge" aria-hidden="true">
 const brackets = `<span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>`;
 
 /* marquee strip */
-const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class="star"> ✳ </span><span>Fine&nbsp;Art</span><span class="star"> ✳ </span><span class="solid">London</span><span class="star"> ✳ </span><span>2022 to 2025</span><span class="star"> ✳ </span>`;
+const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class="star"> ✳ </span><span>Fine&nbsp;Art</span><span class="star"> ✳ </span><span class="solid">London</span><span class="star"> ✳ </span><span>${yearSpan}</span><span class="star"> ✳ </span>`;
 
 /* ---- index.html ------------------------------------------------------- */
 const indexHTML = `${head("Matas · Fine Art", "London-based artist and art director. Original expressionist paintings exploring identity, corruption and the self.")}
@@ -288,7 +294,7 @@ ${header("art")}
 <main>
   <section class="gallery-intro">
     <div class="wrap">
-      <p class="eyebrow load l1">The catalogue · 2022 to 2025</p>
+      <p class="eyebrow load l1">The catalogue · ${yearSpan}</p>
       <h1 class="load l2">Fine art<span class="dot">.</span></h1>
       <p class="sub load l3">Original expressionist paintings, on canvas, oil and banknote, circling identity, corruption, money and the slow erosion of the self.</p>
       <div class="gallery-count load l4">
@@ -300,7 +306,7 @@ ${header("art")}
   </section>
 
   <div class="wrap">
-    ${works.map((w)=>`<article class="piece reveal">
+    ${catalogue.map((w)=>`<article class="piece reveal">
       <figure class="piece-media">
         <button class="piece-zoom" type="button" aria-label="Expand work ${w.num}"></button>
         <img src="${A(w.img)}" alt="Work ${w.num}, ${w.medium}, ${w.year}, by Matas" loading="lazy">
@@ -313,7 +319,7 @@ ${header("art")}
           <dt>Dimensions</dt><dd>${w.size}</dd>
           <dt>Medium</dt><dd>${w.medium}</dd>
           <dt>Year</dt><dd>${w.year}</dd>
-          <dt>Price</dt><dd>${priceMarkup(w.price)}</dd>
+          <dt>Availability</dt><dd>${priceMarkup(w.price)}</dd>
         </dl>
       </div>
     </article>`).join("\n    ")}
