@@ -31,7 +31,7 @@ const projectCard = (p, interactive) => `<article class="proj-card${interactive 
 /* ---- gallery content (Matas, in catalogue order) ---------------------- */
 const works = [
   { num: "003", img: "cd3be181-369c-4c3b-9103-0a0d3c45fcec",
-    concept: "Delves into the fragile essence of innocence and its gradual erosion through external influences. The central disfigured eyes symbolise purity, set within a vast expanse of blue that embodies an ocean of untainted innocence. The darker shades of blue and black signify the pervasive forces of corruption, infiltrating and intertwining with innocence, subtly seeping beneath the surface.",
+    concept: "Explores the fragile essence of innocence and its gradual erosion through external influences. The central disfigured eyes symbolise purity, set within a vast expanse of blue that embodies an ocean of untainted innocence. The darker shades of blue and black signify the pervasive forces of corruption, infiltrating and intertwining with innocence, subtly seeping beneath the surface.",
     tech: "Realised on canvas with acrylic paint, starting the base with a light sketch of the flow with acrylic markers, measuring the correct positioning for the disfigured eyes in the middle.",
     size: "100 × 150 cm", medium: "Acrylic on canvas", year: "2022", price: "£1,250" },
 
@@ -41,22 +41,22 @@ const works = [
     size: "100 × 150 cm", medium: "Acrylic on canvas", year: "2024", price: "£1,100" },
 
   { num: "001.1", img: "a86574f8-7e68-40d0-95b6-8b289221bf09",
-    concept: "Delves into the weight of financial despair and the faceless entities that shape the daily struggle. The single banknote stands as both symbol and witness, its surface carrying the traces of blood-stained histories. The facelessness of government control emerges through the object, suggesting how structures of authority extend quietly into every corner of life.",
+    concept: "Examines the weight of financial despair and the faceless entities that shape the daily struggle. The single banknote stands as both symbol and witness, its surface carrying the traces of blood-stained histories. The facelessness of government control emerges through the object, suggesting how structures of authority extend quietly into every corner of life.",
     tech: "Realised on a $5 bill, with acrylic as the base for the face and an acrylic marker for the details and outline.",
     size: "15.6 × 6.6 cm", medium: "Acrylic on bank note", year: "2023", price: "unavailable" },
 
   { num: "001", img: "b364f682-e3d1-416a-80cf-90b556a73d99",
-    concept: "Delves into the absence of genuine, authentic purpose, often mistaken for the pursuit of wealth and power. It explores the detrimental effects of losing yourself in that pursuit, leading to a loss of identity.",
+    concept: "Confronts the absence of genuine, authentic purpose, often mistaken for the pursuit of wealth and power. It explores the detrimental effects of losing yourself in that pursuit, leading to a loss of identity.",
     tech: "Realised on canvas with spray acrylic as base and acrylic pen for outline.",
     size: "100 × 150 cm", medium: "Acrylic on canvas", year: "2022", price: "unavailable" },
 
   { num: "011", img: "b01cbe59-e2d8-43f0-8ff6-9f8cd67b78cc",
-    concept: "Delves into the darker sides of unchecked infatuation and its power to overwhelm. What begins as desire turns corrosive, leaving behind unease and self-disgust. The imagery suggests a collapse of boundaries, where passion slips into obsession, and the self becomes both the object and victim of its own consumption.",
-    tech: "Realised on canvas with acrylic paint.",
+    concept: "Traces the darker sides of unchecked infatuation and its power to overwhelm. What begins as desire turns corrosive, leaving behind unease and self-disgust. The imagery suggests a collapse of boundaries, where passion slips into obsession, and the self becomes both the object and victim of its own consumption.",
+    tech: "Realised on canvas with oil paint.",
     size: "60 × 60 cm", medium: "Oil on canvas", year: "2025", price: "£725" },
 
   { num: "008", img: "81e28c86-865a-480e-8396-a0b910a30fb2",
-    concept: "A study carried on currency, the figure of a lady with a cat rendered onto money, collapsing the distance between intimacy and exchange.",
+    concept: "Placeholder.",
     tech: "Realised on a 50-dollar note, sketching the lady with the cat in pencil and using acrylic for colour with black pen for the details.",
     size: "15.1 × 6.5 cm", medium: "Acrylic on bank note", year: "2024", price: "£375" },
 
@@ -66,27 +66,27 @@ const works = [
     size: "15.5 × 6.6 cm", medium: "Acrylic on bank note", year: "2024", price: "£275" },
 
   { num: "002", img: "45a74f5e-d016-427e-a1b7-248f466e1ce7",
-    concept: "A figure held in colour and gesture, restraint and intensity meeting on a single plane.",
+    concept: "Placeholder.",
     tech: "Realised on canvas with acrylic paint.",
     size: "50 × 70 cm", medium: "Acrylic on canvas", year: "2022", price: "unavailable" },
 
   { num: "006", img: "8d0863b2-504a-43ad-9a31-b4f67ece96c8",
-    concept: "Delves into the meaning of originality and the ownership of media. The idea itself was manifested through a text-to-image artificial intelligence; the painting unsettles traditional notions of authorship, prompting reflection on where a work truly begins, whether originality lies in conception, execution, or the technology that bridges the two.",
+    concept: "Questions the meaning of originality and the ownership of media. The idea itself was manifested through a text-to-image artificial intelligence; the painting unsettles traditional notions of authorship, prompting reflection on where a work truly begins, whether originality lies in conception, execution, or the technology that bridges the two.",
     tech: "Created from the inspiration of AI, realised on canvas with acrylic paint.",
     size: "100 × 150 cm", medium: "Acrylic on canvas", year: "2023", price: "unavailable" },
 
   { num: "007", img: "9c4986b9-90ee-48c9-8bc0-05dc934ac0ad",
-    concept: "Delves into the predatory nature of the art market, where sales and collections reduce artworks to financial instruments. By confronting the practice of using art as a tax shelter, it challenges the systems that commodify creativity and strip it of intention. The piece resists absorption into that cycle, a refusal of industry norms.",
+    concept: "Exposes the predatory nature of the art market, where sales and collections reduce artworks to financial instruments. By confronting the practice of using art as a tax shelter, it challenges the systems that commodify creativity and strip it of intention. The piece resists absorption into that cycle, a refusal of industry norms.",
     tech: "Realised with deliberate resistance to display: constructed so that it cannot be hung on a wall. Its very form embodies defiance, rejecting the conventions of presentation and possession, using oil paint and fine powder.",
     size: "30 × 30 cm", medium: "Oil and acrylic on canvas", year: "2024", price: "unavailable" },
 
   { num: "005", img: "a5b54075-f5e3-4a4c-98c6-930391dec989",
-    concept: "Delves into the significance of anonymity within a turbulent political landscape. Where authority asserts dominance, the absence of identity becomes a form of protection and resistance. The faceless presence hints at both vulnerability and strength, suggesting how concealment can serve as survival in the face of suppression.",
+    concept: "Considers the significance of anonymity within a turbulent political landscape. Where authority asserts dominance, the absence of identity becomes a form of protection and resistance. The faceless presence hints at both vulnerability and strength, suggesting how concealment can serve as survival in the face of suppression.",
     tech: "Realised on canvas with oil paint.",
     size: "100 × 150 cm", medium: "Oil on canvas", year: "2022", price: "unavailable" },
 
   { num: "004", img: "8cd8e54d-08d6-4fa5-ba80-a523fd7424c2",
-    concept: "Delves into the consuming nature of loneliness and its ability to shape an entire existence. The figure becomes both vessel and source, as isolation pushes outward, spilling beyond the boundaries of the self. Private solitude transforms into an all-encompassing presence, altering not only the inner world but the space around it.",
+    concept: "Captures the consuming nature of loneliness and its ability to shape an entire existence. The figure becomes both vessel and source, as isolation pushes outward, spilling beyond the boundaries of the self. Private solitude transforms into an all-encompassing presence, altering not only the inner world but the space around it.",
     tech: "Realised on canvas with acrylic paint.",
     size: "50 × 50 cm", medium: "Acrylic on canvas", year: "2022", price: "unavailable" },
 ];
@@ -100,9 +100,9 @@ const newWorks = [
   { img: "new-02", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-03", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-04", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-05", concept: "A luminous masked form suspended in a deep field of blue, scratched through with cooler light.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "unavailable" },
-  { img: "new-06", concept: "A face surfacing from a dark mantle, set against a bruised expanse of purple and grey.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2026", price: "Price on request" },
-  { img: "new-07", concept: "A spectral figure dissolving into grey, pierced by red, staring forms.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2026", price: "Price on request" },
+  { img: "new-05", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2025", price: "unavailable" },
+  { img: "new-06", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
+  { img: "new-07", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
 ].filter((w) => fs.existsSync(path.join(__dirname, "assets/img-" + w.img + ".jpg")));
 // number them sequentially after the existing catalogue (…011, 012, 013)
 newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
@@ -225,7 +225,7 @@ ${header("home")}
     <div class="wrap">
       <div class="hero-grid">
         <div>
-          <p class="hero-role load l1">London · Painter &amp; Art Director</p>
+          <p class="hero-role load l1">London · Fine Artist &amp; Art Director</p>
           <h1 class="hero-mark outline load l2">Matas<span class="dot">.</span></h1>
         </div>
         <div class="hero-foot load l3">
