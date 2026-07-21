@@ -103,6 +103,7 @@ const newWorks = [
   { img: "new-05", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2025", price: "unavailable" },
   { img: "new-06", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
   { img: "new-07", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
+  { img: "new-08", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
 ].filter((w) => fs.existsSync(path.join(__dirname, "assets/img-" + w.img + ".jpg")));
 // number them sequentially after the existing catalogue (…011, 012, 013)
 newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
