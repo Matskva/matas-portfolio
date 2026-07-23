@@ -56,7 +56,7 @@ const works = [
     size: "60 × 60 cm", medium: "Oil on canvas", year: "2025", price: "£725" },
 
   { num: "008", img: "81e28c86-865a-480e-8396-a0b910a30fb2",
-    concept: "Placeholder.",
+    concept: "Takes an ironic look at the relationship between Iran and America, an Iranian woman rendered onto an American banknote, the worth of one nation printed straight over the body of another. The cat sits beside her as the only real witness, watching the harm carried out in the name of that currency. She is given no eyes, stripped of sight and self, just another casualty counted among the many and quietly forgotten.",
     tech: "Realised on a 50-dollar note, sketching the lady with the cat in pencil and using acrylic for colour with black pen for the details.",
     size: "15.1 × 6.5 cm", medium: "Acrylic on bank note", year: "2024", price: "£375" },
 
@@ -66,7 +66,7 @@ const works = [
     size: "15.5 × 6.6 cm", medium: "Acrylic on bank note", year: "2024", price: "£275" },
 
   { num: "002", img: "45a74f5e-d016-427e-a1b7-248f466e1ce7",
-    concept: "Placeholder.",
+    concept: "Sinks into the isolation and loneliness that come from being left alone with yourself for too long. The deep blue spreads across the canvas as an ocean of solitude, cold and boundless, holding the figure apart from the world. Within it the face begins to come undone, tracing a slow descent into madness as the mind, starved of anyone else, quietly turns in on itself.",
     tech: "Realised on canvas with acrylic paint.",
     size: "50 × 70 cm", medium: "Acrylic on canvas", year: "2022", price: "unavailable" },
 
@@ -100,10 +100,10 @@ const newWorks = [
   { img: "new-02", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-03", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
   { img: "new-04", concept: "Recent work.", tech: "Acrylic on canvas.", size: "On request", medium: "Acrylic on canvas", year: "2025", price: "Price on request" },
-  { img: "new-05", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2025", price: "unavailable" },
-  { img: "new-06", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
-  { img: "new-07", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
-  { img: "new-08", concept: "Placeholder.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
+  { img: "new-05", concept: "Speaks to being lost in an environment that never stops shifting, learning to adapt to everything around you without ever letting it swallow you whole. The vibrant yellow pulls the figure forward and holds it clear of the ground behind, a self that bends with its surroundings yet refuses to dissolve into them. It is a portrait of survival through adaptation, staying whole while everything else keeps changing.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2025", price: "unavailable" },
+  { img: "new-06", concept: "A collaborative piece about the connection between a person and the natural world, the hair growing outward into the landscape as though the two were never truly apart. Behind the figure a ghostly presence follows close, the shape of a resentful and regretful past that refuses to be left behind. It lingers as a reminder that wherever you go, everything that came before you comes too.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
+  { img: "new-07", concept: "Carries the pride of the Lithuanian symbol, a reconnection with my roots and a wish to hold them close rather than hide them away. The red figure is my own consciousness pushing through the surface of the painting, looking out and seeing my country clearly, for everything it is and everything it has been. It is an act of belonging, claiming a heritage without shame and wearing it openly.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
+  { img: "new-08", concept: "A collaborative piece made as the cover for an upcoming music album. The faces are painted in the pan African colours, worn openly across the head as a mark of identity and belonging. The red ground behind them holds the frustration of the circumstances, the weight of having to sit still and keep from escalating when met with discrimination, of not being free to react the way others can when their skin happens to be a different colour to yours.", tech: "Oil on canvas.", size: "On request", medium: "Oil on canvas", year: "2026", price: "Price on request" },
 ].filter((w) => fs.existsSync(path.join(__dirname, "assets/img-" + w.img + ".jpg")));
 // number them sequentially after the existing catalogue (…011, 012, 013)
 newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
