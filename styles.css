@@ -294,15 +294,6 @@ body.theme-blue .brand .dot { color: #fff; }
 .g-catalogue:hover, .g-catalogue:focus-visible { color: #fff; border-color: #fff; }
 .g-catalogue:hover span { transform: translateX(4px); }
 
-.g-hint {
-  position: absolute; left: 0; right: 0; bottom: clamp(20px, 4vh, 40px);
-  margin: 0; text-align: center;
-  font-family: var(--display); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.14em;
-  font-size: 11px; line-height: 1.7; color: rgba(255, 255, 255, 0.7);
-}
-.g-hint span { opacity: 0.55; }
-
 .g-fallback { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; color: #fff; padding: 24px; }
 .g-fallback h1 { font-family: var(--display); font-weight: 900; font-size: clamp(48px, 12vw, 140px); margin: 0; }
 .g-fallback .dot { color: var(--accent); }

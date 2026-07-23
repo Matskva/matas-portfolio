@@ -245,7 +245,6 @@ const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An inf
         </div>
       </div>
     </section>
-    <p class="g-hint">Use mouse wheel, arrow keys, or touch to navigate<br><span>Auto-play resumes after 3 seconds of inactivity</span></p>
   </div>
 
   <noscript>
