@@ -265,9 +265,14 @@ body.theme-blue .brand .dot { color: #fff; }
 }
 .gallery-page:active { cursor: grabbing; }
 .gallery-page::after { opacity: 0; }   /* drop the paper grain over the gallery */
+/* the canvas lives INSIDE .gallery-overlay (not a fixed sibling) so that the
+   headline's mix-blend-mode shares one stacking context with it — CSS
+   blending only composites within a single stacking context, so a sibling
+   .gallery-root under <body> would never be visible to the blend at all */
 .gallery-root {
-  position: fixed; inset: 0; z-index: 0;
+  position: absolute; inset: 0; z-index: 0;
   touch-action: none;
+  pointer-events: auto;
 }
 .gallery-root #gl { display: block; width: 100%; height: 100%; }
 
@@ -277,7 +282,7 @@ body.theme-blue .brand .dot { color: #fff; }
 }
 .gallery-overlay a { pointer-events: auto; }
 /* the original hero layout, reused as the overlay so positioning is unchanged */
-.gallery-overlay .hero { min-height: 100svh; }
+.gallery-overlay .hero { position: relative; z-index: 1; min-height: 100svh; }
 
 /* small text links (catalogue + contact) */
 .g-catalogue {

@@ -222,9 +222,8 @@ const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class=
 const galleryImages = works.map((w) => A(w.img));
 const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An infinite gallery of original expressionist paintings exploring identity, corruption and the self.", "#000000")}
 <body class="gallery-page">
-  <div class="gallery-root"><canvas id="gl" aria-hidden="true"></canvas></div>
-
   <div class="gallery-overlay">
+    <div class="gallery-root"><canvas id="gl" aria-hidden="true"></canvas></div>
     <section class="hero">
       <div class="wrap">
         <div class="hero-grid">
