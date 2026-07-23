@@ -225,20 +225,27 @@ const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An inf
   <div class="gallery-root"><canvas id="gl" aria-hidden="true"></canvas></div>
 
   <div class="gallery-overlay">
-    <header class="g-top">
-      <a class="brand" href="index.html">Matas<span class="dot">.</span></a>
-      <nav class="g-nav" aria-label="Primary">
-        <a href="art.html">Fine&nbsp;Art</a>
-        <a href="mailto:matas@mail.com">Contact</a>
-      </nav>
-    </header>
-
-    <h1 class="g-headline"><span class="italic">Matas</span><span class="dot">.</span></h1>
-
-    <div class="g-foot">
-      <a class="g-enter" href="art.html">View the catalogue</a>
-      <p class="g-hint">Use mouse wheel, arrow keys, or touch to navigate<br><span>Auto-play resumes after 3 seconds of inactivity</span></p>
-    </div>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <p class="hero-role">London · Fine Artist &amp; Art Director</p>
+            <h1 class="hero-mark outline">Matas<span class="dot">.</span></h1>
+          </div>
+          <div class="hero-foot">
+            <nav class="hero-nav" aria-label="Sections">
+              <a href="art.html">fine&nbsp;art.</a>
+              <a href="mailto:matas@mail.com">contact&nbsp;me.</a>
+            </nav>
+            <div>
+              <p class="hero-lede">I'm a London-based freelance designer and art director with a deep passion for fashion and culture. My work has a <span class="accent">melancholic</span> feel, always reaching back to reconnect with my roots, seeking quality from the past which I bring into my art.</p>
+              <a class="g-catalogue" href="art.html">View the catalogue <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <p class="g-hint">Use mouse wheel, arrow keys, or touch to navigate<br><span>Auto-play resumes after 3 seconds of inactivity</span></p>
   </div>
 
   <noscript>

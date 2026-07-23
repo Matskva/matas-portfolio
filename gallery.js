@@ -14,8 +14,9 @@ if (canvas && root && IMAGES.length) {
   const Z_SPACING = 2.6;     // gap between consecutive planes
   const POOL = Math.max(IMAGES.length, 16);
   const D = POOL * Z_SPACING; // full recycle depth
-  const NEAR = 0.7, FAR = 17; // opacity falloff bounds (distance from camera)
-  const FADE = 4.2;
+  const NEAR = 0.35, FAR = 17;      // opacity falloff bounds (distance from camera)
+  const FADE_FAR = 4.5;             // fade-in distance as a plane approaches from afar
+  const FADE_NEAR = 1.8;            // fade-out distance as a plane passes the camera (smaller = fades later)
   const AUTO_SPEED = reduce ? 0 : 1.7;  // world-units / second
   const SPREAD_X = 5.4, SPREAD_Y = 3.1;
   const BASE_H = 1.75;
@@ -112,8 +113,8 @@ if (canvas && root && IMAGES.length) {
       const z = (Z_FRONT - D) + zn * D;   // range [Z_FRONT - D, Z_FRONT]
       m.position.set(d.x, d.y, z);
       const dist = -z;                     // distance in front of camera
-      const fadeIn = clamp01((FAR - dist) / FADE);
-      const fadeOut = clamp01((dist - NEAR) / FADE);
+      const fadeIn = clamp01((FAR - dist) / FADE_FAR);
+      const fadeOut = clamp01((dist - NEAR) / FADE_NEAR);
       m.material.opacity = fadeIn * fadeOut;
       m.visible = m.material.opacity > 0.001;
     }
