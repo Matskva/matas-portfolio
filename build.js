@@ -86,7 +86,7 @@ const works = [
     size: "100 × 150 cm", medium: "Oil on canvas", year: "2022", price: "unavailable" },
 
   { num: "004", img: "8cd8e54d-08d6-4fa5-ba80-a523fd7424c2",
-    concept: "Captures the consuming nature of loneliness and its ability to shape an entire existence. The figure becomes both vessel and source, as isolation pushes outward, spilling beyond the boundaries of the self. Private solitude transforms into an all-encompassing presence, altering not only the inner world but the space around it.",
+    concept: "Looks at the way loneliness can swell until it fills an entire life. The figure becomes both vessel and source, solitude pushing outward and spilling past the boundaries of the self, until the feeling is no longer held within one person but saturates everything around them. Where solitude usually pulls a person inward, here it turns out and grows vast enough to reshape the whole space it lives in.",
     tech: "Realised on canvas with acrylic paint.",
     size: "50 × 50 cm", medium: "Acrylic on canvas", year: "2022", price: "unavailable" },
 ];
