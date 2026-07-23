@@ -305,6 +305,10 @@ body.theme-blue .brand .dot { color: #fff; }
   background: transparent; color: #fff; border-color: #fff;
 }
 
+/* the big Matas inverts against paintings passing behind it (template's
+   exclusion blend); eyebrow, lede and links stay untouched */
+.gallery-overlay .hero-mark { mix-blend-mode: exclusion; }
+
 /* desktop: slightly heavier outline on the big Matas */
 @media (min-width: 901px) {
   .gallery-overlay .hero-mark { -webkit-text-stroke-width: 2px; text-stroke-width: 2px; }
