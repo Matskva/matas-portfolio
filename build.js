@@ -218,75 +218,39 @@ const brackets = `<span class="brk tl"></span><span class="brk tr"></span><span 
 /* marquee strip */
 const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class="star"> ✳ </span><span>Fine&nbsp;Art</span><span class="star"> ✳ </span><span class="solid">London</span><span class="star"> ✳ </span><span>${yearSpan}</span><span class="star"> ✳ </span>`;
 
-/* ---- index.html ------------------------------------------------------- */
-const indexHTML = `${head("Matas · Fine Art", "London-based artist and art director. Original expressionist paintings exploring identity, corruption and the self.")}
-<body class="theme-blue">
-${header("home")}
-<main>
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <p class="hero-role load l1">London · Fine Artist &amp; Art Director</p>
-          <h1 class="hero-mark outline load l2">Matas<span class="dot">.</span></h1>
-        </div>
-        <div class="hero-foot load l3">
-          <nav class="hero-nav" aria-label="Sections">
-            <a href="art.html">fine&nbsp;art.</a>
-            ${SHOW_PROJECTS?`<a href="projects.html">projects.</a>`:""}
-            <a href="mailto:matas@mail.com">contact&nbsp;me.</a>
-          </nav>
-          <div>
-            <p class="hero-lede">I'm a London-based freelance designer and art director with a deep passion for fashion and culture. My work has a <span class="accent">melancholic</span> feel, always reaching back to reconnect with my roots, seeking quality from the past which I bring into my art.</p>
-            <a class="scroll-cue" href="#work">Selected work</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <span class="autohide-sentinel" aria-hidden="true"></span>
+/* ---- index.html — full-screen infinite 3D gallery --------------------- */
+const galleryImages = works.map((w) => A(w.img));
+const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An infinite gallery of original expressionist paintings exploring identity, corruption and the self.", "#000000")}
+<body class="gallery-page">
+  <div class="gallery-root"><canvas id="gl" aria-hidden="true"></canvas></div>
 
-  <section class="works section-light" id="work">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <h2 class="section-title outline">Fine&nbsp;art<span class="dot">.</span></h2>
-        <a class="section-link" href="art.html">View the full catalogue</a>
-      </div>
-      <div class="mosaic">
-        ${intoColumns(mosaic, 3).map((col)=>`<div class="mcol">
-          ${col.map((m)=>`<a class="tile reveal" href="art.html" aria-label="Painting ${m.num}, ${m.medium}, by Matas">
-            <img src="${A(m.img)}" alt="Painting ${m.num} by Matas, ${m.medium}" loading="lazy">
-            <figcaption><span class="num">View</span></figcaption>
-          </a>`).join("\n          ")}
-        </div>`).join("\n        ")}
-      </div>
-    </div>
-  </section>
+  <div class="gallery-overlay">
+    <header class="g-top">
+      <a class="brand" href="index.html">Matas<span class="dot">.</span></a>
+      <nav class="g-nav" aria-label="Primary">
+        <a href="art.html">Fine&nbsp;Art</a>
+        <a href="mailto:matas@mail.com">Contact</a>
+      </nav>
+    </header>
 
-  ${SHOW_PROJECTS?`<section class="projects-block" id="projects">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <div>
-          <h2 class="section-title outline">Projects<span class="dot">.</span></h2>
-          <p class="projects-sub">Selected work beyond the canvas, art direction, brand and digital.</p>
-        </div>
-        <a class="section-link" href="projects.html">All projects</a>
-      </div>
+    <h1 class="g-headline"><span class="italic">Matas</span><span class="dot">.</span></h1>
+
+    <div class="g-foot">
+      <a class="g-enter" href="art.html">View the catalogue</a>
+      <p class="g-hint">Use mouse wheel, arrow keys, or touch to navigate<br><span>Auto-play resumes after 3 seconds of inactivity</span></p>
     </div>
-    <div class="proj-scroller reveal" data-drag-scroll>
-      <div class="proj-track">
-        ${projects.map((p)=>projectCard(p, true)).join("\n        ")}
-        <a class="proj-card proj-card-end" href="projects.html">
-          <span class="proj-end-label">View all<br>projects</span>
-          <span class="proj-end-arrow" aria-hidden="true">&rarr;</span>
-        </a>
-      </div>
+  </div>
+
+  <noscript>
+    <div class="g-fallback">
+      <h1>Matas<span class="dot">.</span></h1>
+      <p>London-based fine artist. <a href="art.html">View the catalogue</a> · <a href="mailto:matas@mail.com">Contact</a></p>
     </div>
-    <div class="wrap"><p class="proj-hint reveal">Drag or scroll sideways to explore</p></div>
-  </section>`:""}
-</main>
-${footer()}
-<script src="script.js?v=${VER}"></script>
+  </noscript>
+
+  <script>window.__MATAS_WORKS__ = ${JSON.stringify(galleryImages)};</script>
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+  <script type="module" src="gallery.js?v=${VER}"></script>
 </body></html>`;
 
 /* ---- art.html --------------------------------------------------------- */
