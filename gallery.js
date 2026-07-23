@@ -32,11 +32,28 @@ if (canvas && root && IMAGES.length) {
   const loader = new THREE.TextureLoader();
   const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 
-  const geo = new THREE.PlaneGeometry(1, 1);
+  // velocity-driven bend shared by every plane: edges curve away from the
+  // direction of travel while the gallery is moving (the template's cloth-like
+  // warp), easing back flat at rest.
+  const uBend = { value: 0 };
+  const bendPlane = (mat) => {
+    mat.onBeforeCompile = (shader) => {
+      shader.uniforms.uBend = uBend;
+      shader.vertexShader = ("uniform float uBend;\n" + shader.vertexShader).replace(
+        "#include <begin_vertex>",
+        "#include <begin_vertex>\n" +
+        "float bendR2 = position.x * position.x + position.y * position.y;\n" +
+        "transformed.z += uBend * bendR2;"
+      );
+    };
+  };
+
+  const geo = new THREE.PlaneGeometry(1, 1, 20, 20);
   const planes = [];
   for (let i = 0; i < POOL; i++) {
     const src = IMAGES[i % IMAGES.length];
     const mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
+    bendPlane(mat);
     const mesh = new THREE.Mesh(geo, mat);
     const scl = 0.82 + hash(i * 2.1) * 0.5;   // slight size variety
     mesh.userData = {
@@ -97,6 +114,7 @@ if (canvas && root && IMAGES.length) {
   let visible = true;
   document.addEventListener("visibilitychange", () => { visible = !document.hidden; prev = performance.now(); });
 
+  let prevProgress = 0;
   function frame(now) {
     requestAnimationFrame(frame);
     if (!visible) return;
@@ -106,6 +124,11 @@ if (canvas && root && IMAGES.length) {
     // autoplay resumes 3s after the last input
     if (t - lastInput > 3) target += AUTO_SPEED * dt;
     progress = smooth(progress, target, 1 - Math.pow(0.0025, dt)); // frame-rate independent ease
+
+    // bend follows travel speed (sign gives direction), easing flat at rest
+    const vel = (progress - prevProgress) / Math.max(dt, 0.001); prevProgress = progress;
+    const bendTarget = Math.max(-0.55, Math.min(0.55, -vel * 0.085));
+    uBend.value = smooth(uBend.value, bendTarget, 1 - Math.pow(0.001, dt));
 
     for (const m of planes) {
       const d = m.userData;
