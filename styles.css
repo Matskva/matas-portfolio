@@ -324,6 +324,9 @@ body.theme-blue .brand .dot { color: #fff; }
   .gallery-overlay .hero-role { font-size: 10px; letter-spacing: 0.24em; opacity: 0.85; }
   .g-contact-desktop { visibility: hidden; }
   .g-contact-mobile { display: inline-flex; }
+  /* smaller so the links read as a footnote to the lede, not louder than it */
+  .gallery-overlay .g-catalogue { font-size: 10px; letter-spacing: 0.1em; gap: 6px; }
+  .gallery-overlay .g-links { gap: 10px; }
 }
 
 .g-fallback { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; color: #fff; padding: 24px; }
