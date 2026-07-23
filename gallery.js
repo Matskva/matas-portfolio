@@ -117,6 +117,9 @@ if (canvas && root && IMAGES.length) {
       const fadeOut = clamp01((dist - NEAR) / FADE_NEAR);
       m.material.opacity = fadeIn * fadeOut;
       m.visible = m.material.opacity > 0.001;
+      // transparent planes with depthWrite off paint in renderOrder, so sort
+      // by live depth each frame: farther planes first, nearer ones on top
+      m.renderOrder = Math.round((FAR - dist) * 1000);
     }
     renderer.render(scene, camera);
   }

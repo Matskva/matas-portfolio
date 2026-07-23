@@ -279,10 +279,9 @@ body.theme-blue .brand .dot { color: #fff; }
 /* the original hero layout, reused as the overlay so positioning is unchanged */
 .gallery-overlay .hero { min-height: 100svh; }
 
-/* smaller catalogue link where the "Selected work" cue used to sit */
+/* small text links (catalogue + contact) */
 .g-catalogue {
   display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 26px;
   font-family: var(--display); font-weight: 600; font-stretch: 108%;
   text-transform: uppercase; letter-spacing: 0.12em;
   font-size: 12px; color: rgba(255, 255, 255, 0.85);
@@ -293,6 +292,30 @@ body.theme-blue .brand .dot { color: #fff; }
 .g-catalogue span { transition: transform 0.3s var(--ease); }
 .g-catalogue:hover, .g-catalogue:focus-visible { color: #fff; border-color: #fff; }
 .g-catalogue:hover span { transform: translateX(4px); }
+
+.g-links { margin-top: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.g-contact-mobile { display: none; }
+
+/* the contact link sits where the nav buttons were — undo the button styling */
+.hero-nav .g-catalogue {
+  border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0 0 4px; font-style: normal; width: max-content;
+}
+.hero-nav .g-catalogue:hover, .hero-nav .g-catalogue:focus-visible {
+  background: transparent; color: #fff; border-color: #fff;
+}
+
+/* desktop: slightly heavier outline on the big Matas */
+@media (min-width: 901px) {
+  .gallery-overlay .hero-mark { -webkit-text-stroke-width: 2px; text-stroke-width: 2px; }
+}
+
+/* mobile: quieter eyebrow; nav buttons gone (space kept); contact joins the links */
+@media (max-width: 640px) {
+  .gallery-overlay .hero-role { font-size: 10px; letter-spacing: 0.24em; opacity: 0.85; }
+  .g-contact-desktop { visibility: hidden; }
+  .g-contact-mobile { display: inline-flex; }
+}
 
 .g-fallback { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; color: #fff; padding: 24px; }
 .g-fallback h1 { font-family: var(--display); font-weight: 900; font-size: clamp(48px, 12vw, 140px); margin: 0; }

@@ -234,12 +234,14 @@ const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An inf
           </div>
           <div class="hero-foot">
             <nav class="hero-nav" aria-label="Sections">
-              <a href="art.html">fine&nbsp;art.</a>
-              <a href="mailto:matas@mail.com">contact&nbsp;me.</a>
+              <a class="g-catalogue g-contact-desktop" href="mailto:matas@mail.com">Contact me <span aria-hidden="true">&rarr;</span></a>
             </nav>
             <div>
               <p class="hero-lede">I'm a London-based freelance designer and art director with a deep passion for fashion and culture. My work has a <span class="accent">melancholic</span> feel, always reaching back to reconnect with my roots, seeking quality from the past which I bring into my art.</p>
-              <a class="g-catalogue" href="art.html">View the catalogue <span aria-hidden="true">&rarr;</span></a>
+              <div class="g-links">
+                <a class="g-catalogue" href="art.html">View the catalogue <span aria-hidden="true">&rarr;</span></a>
+                <a class="g-catalogue g-contact-mobile" href="mailto:matas@mail.com">Contact me <span aria-hidden="true">&rarr;</span></a>
+              </div>
             </div>
           </div>
         </div>
