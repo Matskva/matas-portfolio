@@ -78,6 +78,70 @@
     }
   }
 
+  /* home hero: painting cards rise up over the text as you scroll, warped by
+     an SVG displacement filter. Desktop + no-reduced-motion only. */
+  const emerge = document.querySelector(".hero-emerge");
+  const heroSec = document.querySelector(".hero");
+  if (emerge && heroSec && !reduce && window.matchMedia("(min-width: 860px)").matches) {
+    document.documentElement.classList.add("emerge-on");
+    const disp = document.querySelector("#warp feDisplacementMap");
+    const cards = Array.from(emerge.querySelectorAll(".ec"));
+    // left = left edge %, w = width vw, delay staggers arrival, rise controls
+    // travel, op peak opacity, rot tilt. Cards are anchored top-left and animated
+    // via top/left + rotate/scale only (percentage translate drops paints).
+    const CFG = [
+      { left: 38, w: 26, delay: 0.05, op: 0.86, rot: 2,  dx: -4 },
+      { left: 14, w: 22, delay: 0.00, op: 0.82, rot: -4, dx: -6 },
+      { left: 62, w: 20, delay: 0.12, op: 0.80, rot: 5,  dx: 6 },
+      { left: 4,  w: 17, delay: 0.24, op: 0.76, rot: -6, dx: -5 },
+      { left: 76, w: 18, delay: 0.34, op: 0.78, rot: 6,  dx: 7 },
+      { left: 30, w: 15, delay: 0.44, op: 0.72, rot: -3, dx: -3 },
+      { left: 54, w: 18, delay: 0.28, op: 0.80, rot: 4,  dx: 5 },
+    ];
+    cards.forEach((c, i) => {
+      const cfg = CFG[i] || CFG[0];
+      c.style.width = cfg.w + "vw";
+    });
+    const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const easeIO = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    let running = false, parked = false;
+    const frame = () => {
+      const vh = window.innerHeight;
+      // scroller-agnostic progress: how far the hero has scrolled up, in viewports.
+      const p = clamp(-heroSec.getBoundingClientRect().top / vh, 0, 3);
+      // outside the active window: hide once, then stop the loop until next scroll.
+      if (p > 1.6) {
+        if (!parked) { cards.forEach((c) => (c.style.opacity = "0")); parked = true; }
+        running = false; return;
+      }
+      parked = false;
+      const e = clamp(p, 0, 1);
+      const gate = 1 - clamp((p - 1.15) / 0.3, 0, 1);
+      const t = performance.now();
+      cards.forEach((c, i) => {
+        const cfg = CFG[i] || CFG[0];
+        const cp = clamp((p - cfg.delay) / 1.15, 0, 1);
+        const top = lerp(82, -44, easeIO(cp));     // rise from below the fold to above it
+        const left = cfg.left + cfg.dx * (cp - 0.5) * 2;
+        const sc = lerp(0.82, 1.06, cp);
+        const bell = Math.pow(Math.sin(Math.PI * cp), 1.1);
+        c.style.top = top.toFixed(2) + "%";
+        c.style.left = left.toFixed(2) + "%";
+        c.style.opacity = (cfg.op * bell * gate).toFixed(3);
+        c.style.transform = "rotate(" + cfg.rot + "deg) scale(" + sc.toFixed(3) + ")";
+      });
+      if (disp) disp.setAttribute("scale", (lerp(46, 12, e) + 3.2 * Math.sin(t * 0.0018) + 3.2).toFixed(1));
+      requestAnimationFrame(frame);
+    };
+    const kick = () => { if (!running) { running = true; requestAnimationFrame(frame); } };
+    // body is the scroll container on this site, so catch scroll in the capture
+    // phase (scroll doesn't bubble); also listen on window for the root scroller.
+    window.addEventListener("scroll", kick, { passive: true, capture: true });
+    window.addEventListener("resize", kick, { passive: true });
+    kick();
+  }
+
   /* art page lightbox: click a painting to see it full size */
   const lb = document.getElementById("lightbox");
   if (lb) {

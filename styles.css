@@ -254,6 +254,28 @@ body.theme-blue .brand .dot { color: #fff; }
 @keyframes cue { 0%,100%{ transform: scaleX(0.4);} 50%{ transform: scaleX(1);} }
 
 /* =========================================================================
+   Home — hero scroll-emerge (painting cards rising over the text)
+   Off by default; JS adds .emerge-on only on desktop / no-reduced-motion.
+   ========================================================================= */
+.hero-emerge {
+  position: fixed; inset: 0; z-index: 40;
+  pointer-events: none; overflow: hidden;
+  opacity: 0;
+}
+.emerge-on .hero-emerge { opacity: 1; }
+.hero-emerge .ec {
+  position: absolute; top: 0; left: 0;
+  width: 22vw; max-width: 320px; height: auto;
+  opacity: 0;
+  border-radius: 3px;
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,0.7), 0 6px 20px -8px rgba(0,0,0,0.5);
+  transform-origin: center;
+  backface-visibility: hidden;
+}
+.emerge-on .hero-emerge .ec { filter: url(#warp); }
+.warp-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* =========================================================================
    Home — selected works mosaic
    ========================================================================= */
 .works {

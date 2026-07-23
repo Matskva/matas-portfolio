@@ -218,6 +218,24 @@ const brackets = `<span class="brk tl"></span><span class="brk tr"></span><span 
 /* marquee strip */
 const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class="star"> ✳ </span><span>Fine&nbsp;Art</span><span class="star"> ✳ </span><span class="solid">London</span><span class="star"> ✳ </span><span>${yearSpan}</span><span class="star"> ✳ </span>`;
 
+/* hero scroll-emerge: painting cards that rise over the hero text, warped by
+   a displacement filter. Progressive enhancement, driven entirely in script.js
+   and gated to desktop / no-reduced-motion, so it never touches the base page. */
+const emergePics = [
+  "new-09", "cd3be181-369c-4c3b-9103-0a0d3c45fcec", "new-08",
+  "b01cbe59-e2d8-43f0-8ff6-9f8cd67b78cc", "d51b01d7-4450-4bf9-b7cd-f0d9324e289b",
+  "a5b54075-f5e3-4a4c-98c6-930391dec989", "9c4986b9-90ee-48c9-8bc0-05dc934ac0ad",
+];
+const emergeHTML = `<div class="hero-emerge" aria-hidden="true">
+    ${emergePics.map((id, i) => `<img class="ec ec${i}" src="${A(id)}" alt="" loading="eager" decoding="async">`).join("\n    ")}
+  </div>
+  <svg class="warp-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+    <filter id="warp" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.013 0.018" numOctaves="2" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs></svg>`;
+
 /* ---- index.html ------------------------------------------------------- */
 const indexHTML = `${head("Matas · Fine Art", "London-based artist and art director. Original expressionist paintings exploring identity, corruption and the self.")}
 <body class="theme-blue">
@@ -244,6 +262,7 @@ ${header("home")}
       </div>
     </div>
   </section>
+  ${emergeHTML}
   <span class="autohide-sentinel" aria-hidden="true"></span>
 
   <section class="works section-light" id="work">
