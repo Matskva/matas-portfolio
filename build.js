@@ -166,6 +166,9 @@ const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"><link 
    same files, so every page declares a canonical URL to avoid duplicate content */
 const SITE = "https://mat4s.com";
 
+/* icon colour, sampled from the ultramarine swatch supplied by Matas */
+const ICON_BLUE = "#1B00D8";
+
 /* Profiles that prove "Matas the artist" is one consistent entity across the web.
    Google leans on these heavily for name queries — add Instagram, artist
    directories, gallery profile pages, anywhere the same name + work appears. */
@@ -199,7 +202,9 @@ const head = (title, desc, themeColor = "#4300ff", pagePath = "/", shareImg = SH
 <meta name="twitter:description" content="${desc}">
 <meta name="twitter:image" content="${SITE}/${A(shareImg)}">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="${A(shareImg)}">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 ${FONTS}
 <link rel="stylesheet" href="styles.css?v=${VER}">
 </head>`;
@@ -516,9 +521,11 @@ Disallow: /vendor/
 Sitemap: ${SITE}/sitemap.xml
 `);
 
-/* favicon: the accent dot from the wordmark, as an inline SVG */
+/* favicon: white M on ultramarine (#1B00D8). The PNG siblings
+   (favicon-32.png, apple-touch-icon.png, icon-512.png) are generated assets
+   committed alongside this, for engines that ignore SVG favicons. */
 fs.writeFileSync(path.join(__dirname, "favicon.svg"),
-`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#000"/><rect x="14" y="38" width="14" height="14" fill="#4300ff"/><text x="10" y="34" font-family="Archivo,Arial,sans-serif" font-size="30" font-weight="900" fill="#fff">M</text></svg>
+`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${ICON_BLUE}"/><text x="32" y="33" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="46" font-weight="900" fill="#fff" text-anchor="middle" dominant-baseline="central">M</text></svg>
 `);
 
 console.log("Wrote index.html, art.html, sitemap.xml, robots.txt, favicon.svg" + (SHOW_PROJECTS ? " and projects.html" : " (projects hidden)"));
