@@ -72,6 +72,18 @@ body::after {
   mix-blend-mode: multiply;
 }
 
+/* screen-reader-only: text alternatives for canvas/visual content. Present in
+   the DOM and read by assistive tech and crawlers, but not painted. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ----- layout helpers -------------------------------------------------- */
 .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
 .eyebrow {
@@ -330,7 +342,7 @@ body.theme-blue .brand .dot { color: #fff; }
 }
 
 .g-fallback { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; color: #fff; padding: 24px; }
-.g-fallback h1 { font-family: var(--display); font-weight: 900; font-size: clamp(48px, 12vw, 140px); margin: 0; }
+.g-fallback-mark { font-family: var(--display); font-weight: 900; font-size: clamp(48px, 12vw, 140px); margin: 0; line-height: 0.9; }
 .g-fallback .dot { color: var(--accent); }
 .g-fallback a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
 

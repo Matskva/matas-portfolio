@@ -162,18 +162,80 @@ function intoColumns(items, n) {
 /* ---- shared chrome ---------------------------------------------------- */
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">`;
 
-const head = (title, desc, themeColor = "#4300ff") => `<!doctype html>
+/* canonical origin — mat4s.com is the live domain; matskva.github.io serves the
+   same files, so every page declares a canonical URL to avoid duplicate content */
+const SITE = "https://mat4s.com";
+const SHARE_IMG = "new-09";   // 016, the strongest wide image, used for link previews
+
+const head = (title, desc, themeColor = "#4300ff", pagePath = "/", shareImg = SHARE_IMG) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta name="description" content="${desc}">
+<link rel="canonical" href="${SITE}${pagePath}">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Matas">
 <meta name="theme-color" content="${themeColor}">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Matas — Fine Art">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${desc}">
+<meta property="og:url" content="${SITE}${pagePath}">
+<meta property="og:image" content="${SITE}/${A(shareImg)}">
+<meta property="og:image:alt" content="Painting by Matas, London-based fine artist">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${desc}">
+<meta name="twitter:image" content="${SITE}/${A(shareImg)}">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${A(shareImg)}">
 ${FONTS}
 <link rel="stylesheet" href="styles.css?v=${VER}">
 </head>`;
+
+/* ---- structured data (JSON-LD) ---------------------------------------- */
+/* Person/Artist — tells search engines who the site is about */
+const personLD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Matas",
+  url: SITE,
+  email: "mailto:matas@mail.com",
+  jobTitle: ["Fine Artist", "Art Director"],
+  description: "London-based fine artist and art director working in oil and acrylic on canvas and on banknotes, exploring identity, corruption, money and the erosion of the self.",
+  address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
+  knowsAbout: ["Expressionist painting", "Oil painting", "Contemporary art", "Art direction"],
+};
+
+/* VisualArtwork for each painting — can surface as rich results in image search */
+const artworkLD = (w) => ({
+  "@type": "VisualArtwork",
+  name: `Work ${w.num}`,
+  image: `${SITE}/${A(w.img)}`,
+  creator: { "@type": "Person", name: "Matas" },
+  artform: "Painting",
+  artMedium: w.medium,
+  dateCreated: w.year,
+  ...(w.size && w.size !== "On request" ? { size: w.size } : {}),
+  ...(w.concept && w.concept !== "Placeholder." ? { abstract: w.concept } : {}),
+  offers: {
+    "@type": "Offer",
+    availability: w.price === "unavailable"
+      ? "https://schema.org/SoldOut"
+      : "https://schema.org/InStock",
+    ...(/^£/.test(w.price)
+      ? { price: w.price.replace(/[£,]/g, ""), priceCurrency: "GBP" }
+      : {}),
+    url: `${SITE}/art.html`,
+    seller: { "@type": "Person", name: "Matas" },
+  },
+});
+
+const ld = (obj) => `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
 
 const header = (page) => `<header class="site-head${page==="home"?" autohide":""}">
   <a class="brand" href="index.html">Matas<span class="dot">.</span></a>
@@ -220,7 +282,21 @@ const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class=
 
 /* ---- index.html — full-screen infinite 3D gallery --------------------- */
 const galleryImages = works.map((w) => A(w.img));
-const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An infinite gallery of original expressionist paintings exploring identity, corruption and the self.", "#000000")}
+const indexHTML = `${head(
+  "Matas — London Fine Artist | Original Expressionist Paintings",
+  "Original expressionist paintings by Matas, London-based fine artist and art director. Oil and acrylic on canvas and banknotes, exploring identity and the self.",
+  "#000000",
+  "/"
+)}
+${ld({ ...personLD, mainEntityOfPage: { "@type": "WebPage", "@id": SITE + "/" } })}
+${ld({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Matas — Fine Art",
+  url: SITE,
+  inLanguage: "en-GB",
+  author: { "@type": "Person", name: "Matas" },
+})}
 <body class="gallery-page">
   <div class="gallery-overlay">
     <div class="gallery-root"><canvas id="gl" aria-hidden="true"></canvas></div>
@@ -248,9 +324,23 @@ const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An inf
     </section>
   </div>
 
+  <!-- Text alternative for the WebGL gallery above. The canvas is aria-hidden,
+       so this is the only way screen readers (and search crawlers) can reach the
+       work shown in it. Same content, non-visual form. -->
+  <section class="sr-only" aria-label="Paintings shown in the gallery">
+    <h2>Paintings by Matas</h2>
+    <p>Original expressionist paintings by Matas, a London-based fine artist, in oil
+    and acrylic on canvas and on banknotes. The work circles identity, corruption,
+    money and the slow erosion of the self.</p>
+    <ul>
+      ${catalogue.map((w)=>`<li><a href="art.html">Work ${w.num} — ${w.medium}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}</a></li>`).join("\n      ")}
+    </ul>
+    <p><a href="art.html">View the full catalogue of ${works.length} paintings</a></p>
+  </section>
+
   <noscript>
     <div class="g-fallback">
-      <h1>Matas<span class="dot">.</span></h1>
+      <p class="g-fallback-mark">Matas<span class="dot">.</span></p>
       <p>London-based fine artist. <a href="art.html">View the catalogue</a> · <a href="mailto:matas@mail.com">Contact</a></p>
     </div>
   </noscript>
@@ -261,14 +351,37 @@ const indexHTML = `${head("Matas · Fine Art", "London-based fine artist. An inf
 </body></html>`;
 
 /* ---- art.html --------------------------------------------------------- */
-const artHTML = `${head("Matas, Fine Art Catalogue", "The complete catalogue of original paintings by Matas: identity, corruption, money and the self.")}
+const artHTML = `${head(
+  `Catalogue — ${works.length} Original Paintings by Matas | London Fine Artist`,
+  `All ${works.length} original paintings by Matas, London-based fine artist. Oil and acrylic on canvas and banknotes, ${yearSpan}, with dimensions and availability.`,
+  "#4300ff",
+  "/art.html"
+)}
+${ld({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Fine Art Catalogue",
+  description: `The complete catalogue of ${works.length} original paintings by Matas.`,
+  url: `${SITE}/art.html`,
+  inLanguage: "en-GB",
+  author: { "@type": "Person", name: "Matas" },
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: catalogue.length,
+    itemListElement: catalogue.map((w, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: artworkLD(w),
+    })),
+  },
+})}
 <body>
 ${header("art")}
 <main>
   <section class="gallery-intro">
     <div class="wrap">
       <p class="eyebrow load l1">The catalogue · ${yearSpan}</p>
-      <h1 class="load l2">Fine art<span class="dot">.</span></h1>
+      <h1 class="load l2">Fine art<span class="dot">.</span><span class="sr-only"> — ${works.length} original paintings by Matas, London</span></h1>
       <p class="sub load l3">Original expressionist paintings, on canvas, oil and banknote, circling identity, corruption, money and the slow erosion of the self.</p>
       <div class="gallery-count load l4">
         <span><b>${works.length}</b> works</span>
@@ -282,10 +395,10 @@ ${header("art")}
     ${catalogue.map((w)=>`<article class="piece reveal">
       <figure class="piece-media">
         <button class="piece-zoom" type="button" aria-label="Expand work ${w.num}"></button>
-        <img src="${A(w.img)}" alt="Work ${w.num}, ${w.medium}, ${w.year}, by Matas" loading="lazy">
+        <img src="${A(w.img)}" alt="Work ${w.num} by Matas, ${w.medium.toLowerCase()}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}${w.concept && w.concept !== "Placeholder." ? " — " + w.concept.split(/(?<=\.)\s/)[0].replace(/"/g, "") : ""}" loading="lazy">
       </figure>
       <div class="piece-text">
-        <div class="piece-num">${w.num.replace(".", '<span class="slash">.</span>')}</div>
+        <h2 class="piece-num">${w.num.replace(".", '<span class="slash">.</span>')}<span class="sr-only"> — ${w.medium}, ${w.year}</span></h2>
         <p class="piece-body">${w.concept}</p>
         <p class="piece-tech">${w.tech}</p>
         <dl class="spec">
@@ -349,4 +462,40 @@ if (SHOW_PROJECTS) {
   try { fs.unlinkSync(path.join(__dirname, "projects.html")); } catch (e) {}
 }
 try { fs.unlinkSync(path.join(__dirname, "jewelry.html")); } catch (e) {}
-console.log("Wrote index.html, art.html" + (SHOW_PROJECTS ? " and projects.html" : " (projects hidden)"));
+
+/* ---- SEO support files ------------------------------------------------- */
+const today = new Date().toISOString().slice(0, 10);
+const pages = ["/", "/art.html", ...(SHOW_PROJECTS ? ["/projects.html"] : [])];
+
+/* sitemap: pages plus every painting image, so images are discoverable */
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${pages.map((p) => `  <url>
+    <loc>${SITE}${p}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${p === "/" ? "1.0" : "0.8"}</priority>${p === "/art.html" ? "\n" + catalogue.map((w) => `    <image:image>
+      <image:loc>${SITE}/${A(w.img)}</image:loc>
+      <image:title>Work ${w.num} by Matas</image:title>
+      <image:caption>${w.medium}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}</image:caption>
+    </image:image>`).join("\n") : ""}
+  </url>`).join("\n")}
+</urlset>
+`;
+fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap);
+
+fs.writeFileSync(path.join(__dirname, "robots.txt"),
+`User-agent: *
+Allow: /
+Disallow: /vendor/
+
+Sitemap: ${SITE}/sitemap.xml
+`);
+
+/* favicon: the accent dot from the wordmark, as an inline SVG */
+fs.writeFileSync(path.join(__dirname, "favicon.svg"),
+`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#000"/><rect x="14" y="38" width="14" height="14" fill="#4300ff"/><text x="10" y="34" font-family="Archivo,Arial,sans-serif" font-size="30" font-weight="900" fill="#fff">M</text></svg>
+`);
+
+console.log("Wrote index.html, art.html, sitemap.xml, robots.txt, favicon.svg" + (SHOW_PROJECTS ? " and projects.html" : " (projects hidden)"));
