@@ -170,7 +170,7 @@ const SITE = "https://mat4s.com";
    Google leans on these heavily for name queries — add Instagram, artist
    directories, gallery profile pages, anywhere the same name + work appears. */
 const SAME_AS = [
-  // "https://www.instagram.com/<your-handle>/",
+  "https://www.instagram.com/stillmatas/",
 ];
 const SHARE_IMG = "new-09";   // 016, the strongest wide image, used for link previews
 
@@ -275,6 +275,7 @@ const footer = () => `<footer class="foot reveal">
       <div class="foot-meta">
         <span class="eyebrow" style="margin-bottom:6px">Enquiries</span>
         <a href="mailto:matas@mail.com">matas@mail.com</a>
+        <a href="https://www.instagram.com/stillmatas/" rel="me noopener" target="_blank">Instagram · @stillmatas</a>
         <span>London, UK</span>
         <span>Commissions &amp; original works available</span>
       </div>
