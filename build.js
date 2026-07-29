@@ -521,11 +521,11 @@ Disallow: /vendor/
 Sitemap: ${SITE}/sitemap.xml
 `);
 
-/* favicon: white M on ultramarine (#1B00D8). The PNG siblings
+/* favicon: solid ultramarine (#1B00D8), no mark. The PNG siblings
    (favicon-32.png, apple-touch-icon.png, icon-512.png) are generated assets
    committed alongside this, for engines that ignore SVG favicons. */
 fs.writeFileSync(path.join(__dirname, "favicon.svg"),
-`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${ICON_BLUE}"/><text x="32" y="33" font-family="Archivo,Helvetica,Arial,sans-serif" font-size="46" font-weight="900" fill="#fff" text-anchor="middle" dominant-baseline="central">M</text></svg>
+`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${ICON_BLUE}"/></svg>
 `);
 
 console.log("Wrote index.html, art.html, sitemap.xml, robots.txt, favicon.svg" + (SHOW_PROJECTS ? " and projects.html" : " (projects hidden)"));
