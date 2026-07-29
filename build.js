@@ -165,6 +165,13 @@ const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"><link 
 /* canonical origin — mat4s.com is the live domain; matskva.github.io serves the
    same files, so every page declares a canonical URL to avoid duplicate content */
 const SITE = "https://mat4s.com";
+
+/* Profiles that prove "Matas the artist" is one consistent entity across the web.
+   Google leans on these heavily for name queries — add Instagram, artist
+   directories, gallery profile pages, anywhere the same name + work appears. */
+const SAME_AS = [
+  // "https://www.instagram.com/<your-handle>/",
+];
 const SHARE_IMG = "new-09";   // 016, the strongest wide image, used for link previews
 
 const head = (title, desc, themeColor = "#4300ff", pagePath = "/", shareImg = SHARE_IMG) => `<!doctype html>
@@ -199,16 +206,30 @@ ${FONTS}
 
 /* ---- structured data (JSON-LD) ---------------------------------------- */
 /* Person/Artist — tells search engines who the site is about */
+/* "Matas" is a heavily contested name (a Danish retail chain, an NBA player,
+   several Wikipedia entries), so this block leans on disambiguation: occupation,
+   place and medium, to associate the name with *this* artist specifically. */
 const personLD = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Matas",
+  alternateName: "Matas — Fine Artist",
   url: SITE,
   email: "mailto:matas@mail.com",
-  jobTitle: ["Fine Artist", "Art Director"],
+  jobTitle: ["Fine Artist", "Painter", "Art Director"],
+  hasOccupation: {
+    "@type": "Occupation",
+    name: "Fine Artist",
+    occupationLocation: { "@type": "City", name: "London" },
+  },
   description: "London-based fine artist and art director working in oil and acrylic on canvas and on banknotes, exploring identity, corruption, money and the erosion of the self.",
+  disambiguatingDescription: "Contemporary expressionist painter based in London, not the Danish retail chain of the same name.",
   address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
-  knowsAbout: ["Expressionist painting", "Oil painting", "Contemporary art", "Art direction"],
+  nationality: { "@type": "Country", name: "Lithuania" },
+  knowsAbout: ["Expressionist painting", "Oil painting", "Contemporary art", "Figurative painting", "Art direction"],
+  /* sameAs is the single strongest signal tying a name to a person. Add your
+     Instagram / artist-profile URLs to SAME_AS below to activate it. */
+  ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
 };
 
 /* VisualArtwork for each painting — can surface as rich results in image search */
@@ -328,10 +349,11 @@ ${ld({
        so this is the only way screen readers (and search crawlers) can reach the
        work shown in it. Same content, non-visual form. -->
   <section class="sr-only" aria-label="Paintings shown in the gallery">
-    <h2>Paintings by Matas</h2>
-    <p>Original expressionist paintings by Matas, a London-based fine artist, in oil
-    and acrylic on canvas and on banknotes. The work circles identity, corruption,
-    money and the slow erosion of the self.</p>
+    <h2>Paintings by Matas, London fine artist</h2>
+    <p>Matas is a fine artist and painter based in London, working in oil and acrylic
+    on canvas and on banknotes. These original expressionist paintings by Matas circle
+    identity, corruption, money and the slow erosion of the self. Matas is available
+    for commissions and gallery enquiries in London and internationally.</p>
     <ul>
       ${catalogue.map((w)=>`<li><a href="art.html">Work ${w.num} — ${w.medium}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}</a></li>`).join("\n      ")}
     </ul>
