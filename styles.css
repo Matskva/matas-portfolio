@@ -594,6 +594,32 @@ body.theme-blue .brand .dot { color: #fff; }
   padding-top: 18px;
 }
 .gallery-count b { color: var(--ink); font-weight: 600; }
+.gallery-count a { color: inherit; border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: color 0.3s var(--ease), border-color 0.3s var(--ease); }
+.gallery-count a:hover, .gallery-count a:focus-visible { color: var(--ink); border-color: var(--ink); }
+
+/* catalogue groups — Available, then the Archive of unavailable work */
+.cat-group { scroll-margin-top: 90px; }
+.cat-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px 28px; flex-wrap: wrap;
+  padding-top: clamp(26px, 5vh, 56px);
+  margin-bottom: clamp(26px, 5vh, 60px);
+  border-top: 1px solid var(--line);
+}
+.cat-group:first-child .cat-head { border-top: 0; padding-top: 0; }
+.cat-head h2 {
+  font-family: var(--display);
+  font-weight: 800; font-stretch: 118%;
+  font-size: clamp(30px, 5vw, 64px);
+  line-height: 0.9; letter-spacing: -0.015em;
+  margin: 0;
+}
+.cat-head h2 .dot { color: var(--accent); }
+.cat-note {
+  margin: 0;
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--faint);
+}
 
 .piece {
   display: grid;

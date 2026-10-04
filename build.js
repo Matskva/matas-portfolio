@@ -113,6 +113,12 @@ works.push(...newWorks);
 /* catalogue page order: newest first (by year, then work number) */
 const catalogue = [...works].sort((a, b) => (b.year - a.year) || (parseFloat(b.num) - parseFloat(a.num)));
 
+/* the page is split into two groups: work still available, then the archive of
+   everything marked unavailable. Both keep the newest-first order above. */
+const isArchived = (w) => w.price === "unavailable";
+const availableWorks = catalogue.filter((w) => !isArchived(w));
+const archivedWorks = catalogue.filter(isArchived);
+
 const allYears = works.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
 
@@ -296,6 +302,25 @@ const priceMarkup = (p) => p === "unavailable"
   ? `<span class="price sold">Unavailable</span>`
   : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
 
+/* one catalogue entry. h3 because the Available/Archive group headings are h2. */
+const pieceMarkup = (w) => `<article class="piece reveal">
+        <figure class="piece-media">
+          <button class="piece-zoom" type="button" aria-label="Expand work ${w.num}"></button>
+          <img src="${A(w.img)}" alt="Work ${w.num} by Matas, ${w.medium.toLowerCase()}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}${w.concept && w.concept !== "Placeholder." ? " — " + w.concept.split(/(?<=\.)\s/)[0].replace(/"/g, "") : ""}" loading="lazy">
+        </figure>
+        <div class="piece-text">
+          <h3 class="piece-num">${w.num.replace(".", '<span class="slash">.</span>')}<span class="sr-only"> — ${w.medium}, ${w.year}</span></h3>
+          <p class="piece-body">${w.concept}</p>
+          <p class="piece-tech">${w.tech}</p>
+          <dl class="spec">
+            <dt>Dimensions</dt><dd>${w.size}</dd>
+            <dt>Medium</dt><dd>${w.medium}</dd>
+            <dt>Year</dt><dd>${w.year}</dd>
+            <dt>Availability</dt><dd>${priceMarkup(w.price)}</dd>
+          </dl>
+        </div>
+      </article>`;
+
 /* rotating circular badge (text on a circle) */
 const badge = `<div class="badge" aria-hidden="true">
   <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
@@ -413,30 +438,29 @@ ${header("art")}
       <p class="sub load l3">Original expressionist paintings, on canvas, oil and banknote, circling identity, corruption, money and the slow erosion of the self.</p>
       <div class="gallery-count load l4">
         <span><b>${works.length}</b> works</span>
-        <span><b>${works.filter(w=>w.price!=="unavailable").length}</b> available</span>
+        <a href="#available"><b>${availableWorks.length}</b> available</a>
+        ${archivedWorks.length ? `<a href="#archive"><b>${archivedWorks.length}</b> archived</a>` : ""}
         <span>London, UK</span>
       </div>
     </div>
   </section>
 
   <div class="wrap">
-    ${catalogue.map((w)=>`<article class="piece reveal">
-      <figure class="piece-media">
-        <button class="piece-zoom" type="button" aria-label="Expand work ${w.num}"></button>
-        <img src="${A(w.img)}" alt="Work ${w.num} by Matas, ${w.medium.toLowerCase()}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}${w.concept && w.concept !== "Placeholder." ? " — " + w.concept.split(/(?<=\.)\s/)[0].replace(/"/g, "") : ""}" loading="lazy">
-      </figure>
-      <div class="piece-text">
-        <h2 class="piece-num">${w.num.replace(".", '<span class="slash">.</span>')}<span class="sr-only"> — ${w.medium}, ${w.year}</span></h2>
-        <p class="piece-body">${w.concept}</p>
-        <p class="piece-tech">${w.tech}</p>
-        <dl class="spec">
-          <dt>Dimensions</dt><dd>${w.size}</dd>
-          <dt>Medium</dt><dd>${w.medium}</dd>
-          <dt>Year</dt><dd>${w.year}</dd>
-          <dt>Availability</dt><dd>${priceMarkup(w.price)}</dd>
-        </dl>
+    <section class="cat-group" id="available" aria-labelledby="available-head">
+      <div class="cat-head reveal">
+        <h2 id="available-head">Available<span class="dot">.</span></h2>
+        <p class="cat-note">${availableWorks.length} ${availableWorks.length === 1 ? "work" : "works"} for sale or enquiry</p>
       </div>
-    </article>`).join("\n    ")}
+      ${availableWorks.map(pieceMarkup).join("\n      ")}
+    </section>
+${archivedWorks.length ? `
+    <section class="cat-group" id="archive" aria-labelledby="archive-head">
+      <div class="cat-head reveal">
+        <h2 id="archive-head">Archive<span class="dot">.</span></h2>
+        <p class="cat-note">${archivedWorks.length} ${archivedWorks.length === 1 ? "work" : "works"} no longer available</p>
+      </div>
+      ${archivedWorks.map(pieceMarkup).join("\n      ")}
+    </section>` : ""}
   </div>
 </main>
 <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Artwork preview">
