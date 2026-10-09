@@ -137,19 +137,32 @@ const archivedWorks = catalogue.filter(isArchived);
    not a link, so a half-finished entry can never become a dead checkout.
    Add the url (and price) and it turns into a live buy button on next build.
 
-   PLACEHOLDERS: sizes below are shape-matched pilots awaiting print-resolution
-   photography. 011/013 are square paintings, 003 is 2:3 portrait.             */
+   Works not listed here fall back to two placeholder sizes derived from the
+   painting's own proportions (see defaultPrintSizes), so every work shows a
+   correctly-shaped print option without 30-odd lines of hand-written sizes.  */
 const prints = [
-  { num: "011", size: "40 × 40 cm" },
-  { num: "011", size: "60 × 60 cm" },
-  { num: "013", size: "40 × 40 cm" },
-  { num: "013", size: "60 × 60 cm" },
-  { num: "003", size: "40 × 60 cm" },
-  { num: "003", size: "60 × 90 cm" },
+  // { num: "011", size: "40 × 40 cm", price: 95, url: "https://buy.stripe.com/…" },
 ];
 
 const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
-const printsFor = (num) => prints.filter((p) => p.num === num);
+
+/* Two shape-matched print sizes per work, long edge 40cm then 60cm, keeping the
+   painting's aspect ratio so nothing is cropped or floated in odd borders. */
+const PRINT_LONG_EDGES_CM = [40, 60];
+const defaultPrintSizes = (w) => {
+  const m = /([\d.]+)\s*×\s*([\d.]+)/.exec(w.size || "");
+  if (!m) return [];                      // "On request" etc. — no print offered
+  const ratio = parseFloat(m[1]) / parseFloat(m[2]);
+  return PRINT_LONG_EDGES_CM.map((L) => {
+    const [a, b] = ratio >= 1 ? [L, Math.round(L / ratio)] : [Math.round(L * ratio), L];
+    return { num: w.num, size: `${a} × ${b} cm` };
+  });
+};
+
+const printsFor = (w) => {
+  const listed = prints.filter((p) => p.num === w.num);
+  return listed.length ? listed : defaultPrintSizes(w);
+};
 const anyPrints = prints.some(isLive);
 
 const allYears = works.map((w) => +w.year);
@@ -349,8 +362,8 @@ const pieceMarkup = (w) => `<article class="piece reveal">
             <dt>Dimensions</dt><dd>${w.size}</dd>
             <dt>Medium</dt><dd>${w.medium}</dd>
             <dt>Year</dt><dd>${w.year}</dd>
-            <dt>Original</dt><dd>${priceMarkup(w.price)}</dd>${printsFor(w.num).length ? `
-            <dt>Prints</dt><dd class="print-opts">${printsFor(w.num).map((p) => isLive(p)
+            <dt>Original</dt><dd>${priceMarkup(w.price)}</dd>${printsFor(w).length ? `
+            <dt>Prints</dt><dd class="print-opts">${printsFor(w).map((p) => isLive(p)
               ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
               : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`).join("")}</dd>` : ""}
           </dl>
