@@ -127,16 +127,30 @@ const archivedWorks = catalogue.filter(isArchived);
    this list is safe to ship empty or half-filled — no dead buttons appear.
 
      num   — catalogue number this print reproduces (must match a work above)
-     size  — label shown on the site
-     price — retail GBP, as displayed
-     url   — Stripe Payment Link, e.g. https://buy.stripe.com/xxxxxxxx        */
+     size  — label shown on the site. Match the painting's aspect ratio; don't
+             force A-sizes (1:1.414), which fit almost nothing in this catalogue
+     price — retail GBP. OMIT until it's real — an invented price on a live page
+             is a promise you have to honour
+     url   — Stripe Payment Link, e.g. https://buy.stripe.com/xxxxxxxx
+
+   An entry WITHOUT a usable `url` renders as muted "Coming soon" text that is
+   not a link, so a half-finished entry can never become a dead checkout.
+   Add the url (and price) and it turns into a live buy button on next build.
+
+   PLACEHOLDERS: sizes below are shape-matched pilots awaiting print-resolution
+   photography. 011/013 are square paintings, 003 is 2:3 portrait.             */
 const prints = [
-  // { num: "016", size: "A2 · 42 × 59.4 cm", price: 95, url: "https://buy.stripe.com/…" },
-  // { num: "016", size: "A1 · 59.4 × 84 cm", price: 160, url: "https://buy.stripe.com/…" },
+  { num: "011", size: "40 × 40 cm" },
+  { num: "011", size: "60 × 60 cm" },
+  { num: "013", size: "40 × 40 cm" },
+  { num: "013", size: "60 × 60 cm" },
+  { num: "003", size: "40 × 60 cm" },
+  { num: "003", size: "60 × 90 cm" },
 ];
 
-const printsFor = (num) => prints.filter((p) => p.num === num && p.url && !/…|\.\.\./.test(p.url));
-const anyPrints = prints.some((p) => p.url && !/…|\.\.\./.test(p.url));
+const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
+const printsFor = (num) => prints.filter((p) => p.num === num);
+const anyPrints = prints.some(isLive);
 
 const allYears = works.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
@@ -336,7 +350,9 @@ const pieceMarkup = (w) => `<article class="piece reveal">
             <dt>Medium</dt><dd>${w.medium}</dd>
             <dt>Year</dt><dd>${w.year}</dd>
             <dt>Original</dt><dd>${priceMarkup(w.price)}</dd>${printsFor(w.num).length ? `
-            <dt>Prints</dt><dd class="print-opts">${printsFor(w.num).map((p) => `<a class="print-buy" href="${p.url}">${p.size} <span class="print-price">£${p.price}</span></a>`).join("")}</dd>` : ""}
+            <dt>Prints</dt><dd class="print-opts">${printsFor(w.num).map((p) => isLive(p)
+              ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
+              : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`).join("")}</dd>` : ""}
           </dl>
         </div>
       </article>`;

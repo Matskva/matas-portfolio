@@ -731,6 +731,13 @@ body.lb-open { overflow: hidden; }
 .print-buy:hover, .print-buy:focus-visible { border-color: var(--ink); }
 .print-buy:hover::after { transform: translateX(3px); color: var(--ink); }
 .print-price { font-family: var(--display); font-weight: 700; font-stretch: 110%; }
+
+/* awaiting a Stripe link — deliberately not a link, so it can't be clicked */
+.print-soon { display: inline-flex; align-items: baseline; gap: 10px; color: var(--faint); }
+.print-soon-tag {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid var(--line); border-radius: 2px; padding: 2px 6px;
+}
 a.price.avail { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 a.price.avail:hover { text-decoration-thickness: 2px; }
 
