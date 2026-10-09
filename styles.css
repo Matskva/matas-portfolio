@@ -716,6 +716,21 @@ body.lb-open { overflow: hidden; }
 .price { font-family: var(--display); font-weight: 700; font-stretch: 110%; }
 .price.sold { color: var(--faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; font-stretch: 100%; }
 .price.avail { color: var(--accent); }
+
+/* print editions — accent is kept for the original enquiry, so prints read as
+   the quieter, transactional option rather than competing with it */
+.print-opts { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+.print-buy {
+  display: inline-flex; align-items: baseline; gap: 10px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition: border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.print-buy::after { content: "→"; color: var(--faint); transition: transform 0.3s var(--ease), color 0.3s var(--ease); }
+.print-buy:hover, .print-buy:focus-visible { border-color: var(--ink); }
+.print-buy:hover::after { transform: translateX(3px); color: var(--ink); }
+.print-price { font-family: var(--display); font-weight: 700; font-stretch: 110%; }
 a.price.avail { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 a.price.avail:hover { text-decoration-thickness: 2px; }
 

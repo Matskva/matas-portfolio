@@ -119,6 +119,25 @@ const isArchived = (w) => w.price === "unavailable";
 const availableWorks = catalogue.filter((w) => !isArchived(w));
 const archivedWorks = catalogue.filter(isArchived);
 
+/* ---- print editions ----------------------------------------------------
+   Prints sell through Stripe Payment Links; the print itself is ordered from
+   creativehub by hand after each sale (the workflow is written up in PRINTS.md).
+
+   Nothing renders for a work until it has an entry here WITH a live `url`, so
+   this list is safe to ship empty or half-filled — no dead buttons appear.
+
+     num   — catalogue number this print reproduces (must match a work above)
+     size  — label shown on the site
+     price — retail GBP, as displayed
+     url   — Stripe Payment Link, e.g. https://buy.stripe.com/xxxxxxxx        */
+const prints = [
+  // { num: "016", size: "A2 · 42 × 59.4 cm", price: 95, url: "https://buy.stripe.com/…" },
+  // { num: "016", size: "A1 · 59.4 × 84 cm", price: 160, url: "https://buy.stripe.com/…" },
+];
+
+const printsFor = (num) => prints.filter((p) => p.num === num && p.url && !/…|\.\.\./.test(p.url));
+const anyPrints = prints.some((p) => p.url && !/…|\.\.\./.test(p.url));
+
 const allYears = works.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
 
@@ -316,7 +335,8 @@ const pieceMarkup = (w) => `<article class="piece reveal">
             <dt>Dimensions</dt><dd>${w.size}</dd>
             <dt>Medium</dt><dd>${w.medium}</dd>
             <dt>Year</dt><dd>${w.year}</dd>
-            <dt>Availability</dt><dd>${priceMarkup(w.price)}</dd>
+            <dt>Original</dt><dd>${priceMarkup(w.price)}</dd>${printsFor(w.num).length ? `
+            <dt>Prints</dt><dd class="print-opts">${printsFor(w.num).map((p) => `<a class="print-buy" href="${p.url}">${p.size} <span class="print-price">£${p.price}</span></a>`).join("")}</dd>` : ""}
           </dl>
         </div>
       </article>`;
