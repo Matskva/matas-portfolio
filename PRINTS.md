@@ -16,7 +16,13 @@ production + delivery → the difference is your margin.
 2. **Brand the checkout** so the handoff doesn't feel like a different company:
    Stripe dashboard → Settings → Branding. Set the logo and the accent colour to
    `#4300ff` (the site accent). Takes two minutes and matters.
-3. **creativehub account** — upload the artwork and note the production cost for
+3. **Check Apple Pay / Google Pay are on** — Stripe dashboard → Settings →
+   Payment methods. They're normally enabled by default. Nothing else is needed:
+   Stripe's docs state that for Payment Links and hosted Checkout "Apple Pay
+   works with no additional configuration", so there's no domain to register and
+   no code to add. (Domain registration is only required if the payment form is
+   ever embedded directly in the page via Elements or embedded Checkout.)
+4. **creativehub account** — upload the artwork and note the production cost for
    each size you want to sell (their quote includes delivery and VAT).
 
 ## Adding a print — repeat per size
