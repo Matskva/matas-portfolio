@@ -56,6 +56,28 @@ sips -s format tiff \
      -s dpiWidth 300 -s dpiHeight 300 \
      "$SRC" --out "$OUT" >/dev/null
 
+# Bake EXIF orientation into the pixels. A phone photo stores the sensor
+# readout plus an "orientation" tag telling viewers to rotate it. Print
+# services routinely ignore that tag — which prints the painting on its side.
+# Rotating for real and dropping the tag removes the ambiguity entirely.
+python3 - "$OUT" <<'PY'
+import sys
+from PIL import Image, ImageOps
+Image.MAX_IMAGE_PIXELS = None
+p = sys.argv[1]
+im  = Image.open(p)
+icc = im.info.get("icc_profile")             # keep the embedded sRGB profile
+tag = im.getexif().get(274)
+if tag not in (None, 1):
+    fixed = ImageOps.exif_transpose(im)      # physically rotate
+    before = im.size
+    fixed.save(p, dpi=(300, 300), icc_profile=icc)
+    print(f"  orientation tag {tag} baked in: {before} -> {fixed.size}")
+else:
+    im.save(p, dpi=(300, 300), icc_profile=icc)
+    print("  orientation already upright")
+PY
+
 OW=$(sips  -g pixelWidth   "$OUT" | awk '/pixelWidth/{print $2}')
 OH=$(sips  -g pixelHeight  "$OUT" | awk '/pixelHeight/{print $2}')
 BIT=$(sips -g bitsPerSample "$OUT" | awk '/bitsPerSample/{print $2}')
