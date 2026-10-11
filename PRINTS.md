@@ -25,6 +25,43 @@ production + delivery → the difference is your margin.
 4. **creativehub account** — upload the artwork and note the production cost for
    each size you want to sell (their quote includes delivery and VAT).
 
+## Photographing the work for print
+
+The images on the website are web-sized (900–1600px) and **cannot be printed** —
+they top out around 14cm. Prints need separate, full-resolution captures.
+
+**Pixels needed on the long edge:**
+
+| Print | 300dpi (fine art) | 240dpi (good) | 180dpi (floor) |
+|---|---|---|---|
+| 40 cm | 4,724 | 3,780 | 2,835 |
+| 60 cm | 7,087 | 5,669 | 4,252 |
+
+**Shoot at 48MP.** The iPhone's default 12MP mode gives 4,032px — only 34cm at
+300dpi, so it cannot produce the 60cm prints we advertise. Turn on
+Settings → Camera → Formats → Resolution Control, then tap **48** in the camera
+app. 48MP gives 8,064px ≈ 68cm, with room to crop.
+
+What actually ruins art reproduction, in order:
+
+1. **Glare.** Oil and varnish are reflective. Shoot in soft, indirect light —
+   open shade or an overcast day near a window. Never direct sun, never flash.
+2. **Not square-on.** Centre the lens on the middle of the canvas, perpendicular
+   to it. Off-angle gives keystone distortion that can't be fully fixed later.
+3. **Uneven light.** Light falling brighter on one side prints as a visible
+   gradient. Two equal lights at 45° either side, or flat daylight.
+4. **Cropping too tight.** Leave a margin around the canvas so the image can be
+   straightened and cropped to the painting edge without losing any artwork.
+5. **Not locking exposure.** Tap-and-hold to lock AE/AF so a sequence of works
+   stays consistent. Turn HDR off if it's exaggerating contrast.
+
+Shoot **ProRAW** if available — far more latitude to correct colour, which
+matters because the print is judged against the actual painting.
+
+Export with **File → Export → Export Unmodified Original**, not "Export 1 Photo"
+(which downsizes). Then send them over and each file can be checked against the
+table above before anything is listed.
+
 ## Adding a print — repeat per size
 
 1. **Work out the price.** Get creativehub's cost for that size, then set retail.
