@@ -3,15 +3,25 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://mat4s.com/</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mat4s.com/art.html</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://mat4s.com/assets/img-new-11.jpg</image:loc>
+      <image:title>Work 018 by Matas</image:title>
+      <image:caption>Oil on canvas, 2026</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://mat4s.com/assets/img-new-10.jpg</image:loc>
+      <image:title>Work 017 by Matas</image:title>
+      <image:caption>Oil on canvas, 2026</image:caption>
+    </image:image>
     <image:image>
       <image:loc>https://mat4s.com/assets/img-new-09.jpg</image:loc>
       <image:title>Work 016 by Matas</image:title>
