@@ -112,8 +112,15 @@ const newWorks = [
 newWorks.forEach((w, i) => { w.num = String(12 + i).padStart(3, "0"); });
 works.push(...newWorks);
 
+/* Temporarily pulled from the site. Numbering happens ABOVE this line, so a
+   hidden work keeps its number and everything after it keeps theirs — removing
+   016 must not slide 017 and 018 down. The entry, description, dimensions and
+   image all stay in place; delete from this list to put the work back. */
+const HIDDEN = ["016"];
+const visible = works.filter((w) => !HIDDEN.includes(w.num));
+
 /* catalogue page order: newest first (by year, then work number) */
-const catalogue = [...works].sort((a, b) => (b.year - a.year) || (parseFloat(b.num) - parseFloat(a.num)));
+const catalogue = [...visible].sort((a, b) => (b.year - a.year) || (parseFloat(b.num) - parseFloat(a.num)));
 
 /* the page is split into two groups: work still available, then the archive of
    everything marked unavailable. Both keep the newest-first order above. */
@@ -167,7 +174,7 @@ const printsFor = (w) => {
 };
 const anyPrints = prints.some(isLive);
 
-const allYears = works.map((w) => +w.year);
+const allYears = visible.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
 
 /* read width/height straight from a JPEG so masonry columns balance */
@@ -196,7 +203,7 @@ const ratios = {
   "8d0863b2-504a-43ad-9a31-b4f67ece96c8": 1.71, "9c4986b9-90ee-48c9-8bc0-05dc934ac0ad": 0.99,
   "a5b54075-f5e3-4a4c-98c6-930391dec989": 1.46, "8cd8e54d-08d6-4fa5-ba80-a523fd7424c2": 1.01,
 };
-const mosaic = works.map((w) => ({
+const mosaic = visible.map((w) => ({
   img: w.img,
   r: ratios[w.img] || jpegRatio("assets/img-" + w.img + ".jpg"),
   num: w.num || "", medium: w.medium || "",
@@ -229,7 +236,8 @@ const ICON_BLUE = "#1B00D8";
 const SAME_AS = [
   "https://www.instagram.com/bloodtvx/",
 ];
-const SHARE_IMG = "new-09";   // 016, the strongest wide image, used for link previews
+const SHARE_IMG = "new-10";   // 017 — link-preview image. Must be a VISIBLE work:
+                              // a hidden one would preview a painting not on the site.
 
 const head = (title, desc, themeColor = "#4300ff", pagePath = "/", shareImg = SHARE_IMG) => `<!doctype html>
 <html lang="en">
@@ -384,7 +392,7 @@ const brackets = `<span class="brk tl"></span><span class="brk tr"></span><span 
 const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class="star"> ✳ </span><span>Fine&nbsp;Art</span><span class="star"> ✳ </span><span class="solid">London</span><span class="star"> ✳ </span><span>${yearSpan}</span><span class="star"> ✳ </span>`;
 
 /* ---- index.html — full-screen infinite 3D gallery --------------------- */
-const galleryImages = works.map((w) => A(w.img));
+const galleryImages = visible.map((w) => A(w.img));
 const indexHTML = `${head(
   "Matas — London Fine Artist | Original Expressionist Paintings",
   "Original expressionist paintings by Matas, London-based fine artist and art director. Oil and acrylic on canvas and banknotes, exploring identity and the self.",
@@ -439,7 +447,7 @@ ${ld({
     <ul>
       ${catalogue.map((w)=>`<li><a href="art.html">Work ${w.num} — ${w.medium}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}</a></li>`).join("\n      ")}
     </ul>
-    <p><a href="art.html">View the full catalogue of ${works.length} paintings</a></p>
+    <p><a href="art.html">View the full catalogue of ${visible.length} paintings</a></p>
   </section>
 
   <noscript>
@@ -456,8 +464,8 @@ ${ld({
 
 /* ---- art.html --------------------------------------------------------- */
 const artHTML = `${head(
-  `Catalogue — ${works.length} Original Paintings by Matas | London Fine Artist`,
-  `All ${works.length} original paintings by Matas, London-based fine artist. Oil and acrylic on canvas and banknotes, ${yearSpan}, with dimensions and availability.`,
+  `Catalogue — ${visible.length} Original Paintings by Matas | London Fine Artist`,
+  `All ${visible.length} original paintings by Matas, London-based fine artist. Oil and acrylic on canvas and banknotes, ${yearSpan}, with dimensions and availability.`,
   "#4300ff",
   "/art.html"
 )}
@@ -465,7 +473,7 @@ ${ld({
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   name: "Fine Art Catalogue",
-  description: `The complete catalogue of ${works.length} original paintings by Matas.`,
+  description: `The complete catalogue of ${visible.length} original paintings by Matas.`,
   url: `${SITE}/art.html`,
   inLanguage: "en-GB",
   author: { "@type": "Person", name: "Matas" },
@@ -485,10 +493,10 @@ ${header("art")}
   <section class="gallery-intro">
     <div class="wrap">
       <p class="eyebrow load l1">The catalogue · ${yearSpan}</p>
-      <h1 class="load l2">Fine art<span class="dot">.</span><span class="sr-only"> — ${works.length} original paintings by Matas, London</span></h1>
+      <h1 class="load l2">Fine art<span class="dot">.</span><span class="sr-only"> — ${visible.length} original paintings by Matas, London</span></h1>
       <p class="sub load l3">Original expressionist paintings, on canvas, oil and banknote, circling identity, corruption, money and the slow erosion of the self.</p>
       <div class="gallery-count load l4">
-        <span><b>${works.length}</b> works</span>
+        <span><b>${visible.length}</b> works</span>
         <a href="#available"><b>${availableWorks.length}</b> available</a>
         ${archivedWorks.length ? `<a href="#archive"><b>${archivedWorks.length}</b> archived</a>` : ""}
         <span>London, UK</span>
