@@ -62,6 +62,8 @@ if (canvas && root && IMAGES.length) {
       y: (hash(i * 5.3) - 0.5) * SPREAD_Y,
       scl,
       aspect: 1,
+      loaded: 0,          // 0 until the texture arrives, then eases to 1 — never a blank white plane
+      ready: false,
     };
     mesh.scale.set(BASE_H * scl, BASE_H * scl, 1);
     mesh.renderOrder = i;
@@ -73,6 +75,7 @@ if (canvas && root && IMAGES.length) {
       mesh.userData.aspect = a;
       mesh.scale.set(BASE_H * scl * a, BASE_H * scl, 1);
       mat.map = tex; mat.needsUpdate = true;
+      mesh.userData.ready = true;
     });
   }
 
@@ -138,7 +141,8 @@ if (canvas && root && IMAGES.length) {
       const dist = -z;                     // distance in front of camera
       const fadeIn = clamp01((FAR - dist) / FADE_FAR);
       const fadeOut = clamp01((dist - NEAR) / FADE_NEAR);
-      m.material.opacity = fadeIn * fadeOut;
+      if (d.ready && d.loaded < 1) d.loaded = Math.min(1, d.loaded + dt / 0.5);   // 0.5s fade-in once loaded
+      m.material.opacity = fadeIn * fadeOut * d.loaded;
       m.visible = m.material.opacity > 0.001;
       // transparent planes with depthWrite off paint in renderOrder, so sort
       // by live depth each frame: farther planes first, nearer ones on top

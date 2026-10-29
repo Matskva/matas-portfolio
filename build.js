@@ -4,6 +4,37 @@ const fs = require("fs");
 const path = require("path");
 
 const A = (id) => `assets/img-${id}.jpg`;
+
+/* Light copies for fast first loads: 800px on the long edge, made with macOS
+   sips the first time a painting is built (or when its photo changes). The 3D
+   gallery uses only these; the catalogue offers them via srcset with the full
+   file for big/retina screens and the lightbox. Off a Mac (no sips), T() just
+   falls back to the full image. */
+const { execFileSync } = require("child_process");
+const THUMB_DIR = "assets/thumbs";
+const T = (id) => {
+  const src = path.join(__dirname, A(id)), rel = `${THUMB_DIR}/img-${id}.jpg`, dst = path.join(__dirname, rel);
+  try {
+    if (!fs.existsSync(dst) || fs.statSync(dst).mtimeMs < fs.statSync(src).mtimeMs) {
+      fs.mkdirSync(path.dirname(dst), { recursive: true });
+      execFileSync("sips", ["-Z", "800", "-s", "format", "jpeg", "-s", "formatOptions", "70", src, "--out", dst], { stdio: "ignore" });
+    }
+    return rel;
+  } catch (e) { return A(id); }
+};
+/** pixel width of a JPEG (for srcset), read from its SOF marker */
+const jpegWidth = (rel) => {
+  try {
+    const b = fs.readFileSync(path.join(__dirname, rel));
+    for (let i = 2; i < b.length - 9;) {
+      if (b[i] !== 0xFF) { i++; continue; }
+      const m = b[i + 1];
+      if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC) return b.readUInt16BE(i + 7);
+      i += 2 + b.readUInt16BE(i + 2);
+    }
+  } catch (e) {}
+  return 1600;
+};
 const VER = Date.now().toString(36);   // cache-bust css/js on every build
 
 // Projects is hidden for now — flip to true to bring back the tab, page,
@@ -212,9 +243,10 @@ const estimatePrice = (size) => {
 
 const printsFor = (w) => {
   const listed = prints.filter((p) => p.num === w.num);
+  if (isArchived(w)) return [];
   if (listed.length) return listed;
   const sizes = defaultPrintSizes(w);
-  return isArchived(w) ? sizes : sizes.map((p) => ({ ...p, price: estimatePrice(p.size) }));
+  return isArchived(w) ? [] : sizes.map((p) => ({ ...p, price: estimatePrice(p.size) }));   // archived: no prints row
 };
 const anyPrints = prints.some(isLive);
 /* everything that can go in the cart — written to shop.json for the worker */
@@ -408,7 +440,7 @@ const priceMarkup = (w) => w.price === "unavailable"
 const pieceMarkup = (w) => `<article class="piece reveal">
         <figure class="piece-media">
           <button class="piece-zoom" type="button" aria-label="Expand work ${w.num}"></button>
-          <img src="${A(w.img)}" alt="Work ${w.num} by Matas, ${w.medium.toLowerCase()}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}${w.concept && w.concept !== "Placeholder." ? " — " + w.concept.split(/(?<=\.)\s/)[0].replace(/"/g, "") : ""}" loading="lazy">
+          <img src="${T(w.img)}" srcset="${T(w.img)} 800w, ${A(w.img)} ${jpegWidth(A(w.img))}w" sizes="(max-width: 900px) 92vw, 46vw" data-full="${A(w.img)}" alt="Work ${w.num} by Matas, ${w.medium.toLowerCase()}, ${w.year}${w.size && w.size !== "On request" ? ", " + w.size : ""}${w.concept && w.concept !== "Placeholder." ? " — " + w.concept.split(/(?<=\.)\s/)[0].replace(/"/g, "") : ""}" loading="lazy">
         </figure>
         <div class="piece-text">
           <h3 class="piece-num">${w.num.replace(".", '<span class="slash">.</span>')}<span class="sr-only"> — ${w.medium}, ${w.year}</span></h3>
@@ -442,7 +474,7 @@ const brackets = `<span class="brk tl"></span><span class="brk tr"></span><span 
 const marqUnit = `<span class="solid">Original&nbsp;Paintings</span><span class="star"> ✳ </span><span>Fine&nbsp;Art</span><span class="star"> ✳ </span><span class="solid">London</span><span class="star"> ✳ </span><span>${yearSpan}</span><span class="star"> ✳ </span>`;
 
 /* ---- index.html — full-screen infinite 3D gallery --------------------- */
-const galleryImages = visible.map((w) => A(w.img));
+const galleryImages = visible.map((w) => T(w.img));
 const indexHTML = `${head(
   "Matas — London Fine Artist | Original Expressionist Paintings",
   "Original expressionist paintings by Matas, London-based fine artist and art director. Oil and acrylic on canvas and banknotes, exploring identity and the self.",

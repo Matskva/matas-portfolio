@@ -84,7 +84,7 @@
     const lbImg = lb.querySelector(".lightbox-img");
     const lbCap = lb.querySelector(".lightbox-cap");
     const open = (img) => {
-      lbImg.src = img.currentSrc || img.src;
+      lbImg.src = img.dataset.full || img.currentSrc || img.src;   // lightbox always shows the full-size photo
       lbImg.alt = img.alt || "";
       lbCap.textContent = (img.alt || "").replace(/, by Matas$/, "");
       lb.classList.add("open"); lb.setAttribute("aria-hidden", "false");
