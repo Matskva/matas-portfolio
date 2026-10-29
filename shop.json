@@ -200,16 +200,6 @@
       "detail": "33 × 60 cm",
       "amount": 12500,
       "image": "assets/img-new-11.jpg"
-    },
-    {
-      "id": "test-payment",
-      "kind": "test",
-      "num": "",
-      "max": 1,
-      "name": "Test payment",
-      "detail": "Not a real order, will be refunded",
-      "amount": 100,
-      "image": "icon-512.png"
     }
   ]
 }

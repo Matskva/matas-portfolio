@@ -255,7 +255,7 @@ const shopItems = visible.flatMap((w) => printsFor(w).map((p) => printItem(w, p)
 /* TEMPORARY £1 test item for checking real card payments end to end. Hidden on
    the page unless opened as art.html?testpay — set to false (and rebuild) once
    the test purchase is done and refunded. */
-const TEST_PAYMENT = true;
+const TEST_PAYMENT = false;
 const testItem = TEST_PAYMENT && {
   id: "test-payment", kind: "test", num: "", max: 1,
   name: "Test payment", detail: "Not a real order, will be refunded",
