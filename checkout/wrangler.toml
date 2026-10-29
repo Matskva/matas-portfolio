@@ -5,10 +5,15 @@ compatibility_date = "2026-10-01"
 [vars]
 SITE = "https://mat4s.com"
 ALLOWED_ORIGINS = "https://mat4s.com,https://www.mat4s.com,https://matskva.github.io"
-# Countries Stripe will take a delivery address for (ISO codes, comma separated)
-SHIP_COUNTRIES = "GB"
-# Flat delivery charge per order in pence, e.g. "1500" for £15. Empty = no charge.
-SHIPPING_PENCE = ""
+
+# The buyer picks UK or international in the cart; Stripe then only accepts an
+# address from that list, so the delivery paid always matches the destination.
+UK_COUNTRIES = "GB"
+UK_SHIPPING_PENCE = "0"          # free UK delivery (creativehub's cost is in the print price)
+INTL_SHIPPING_PENCE = "2000"     # £20 per international order
+# Everywhere Stripe accepts except GB (that's UK delivery) and places couriers
+# can't or won't deliver to (sanctioned countries, uninhabited territories).
+INTL_COUNTRIES = "AC,AD,AE,AF,AG,AI,AL,AM,AO,AR,AT,AU,AW,AX,AZ,BA,BB,BD,BE,BF,BG,BH,BI,BJ,BL,BM,BN,BO,BQ,BR,BS,BT,BW,BZ,CA,CD,CF,CG,CH,CI,CK,CL,CM,CN,CO,CR,CV,CW,CY,CZ,DE,DJ,DK,DM,DO,DZ,EC,EE,EG,EH,ER,ES,ET,FI,FJ,FK,FO,FR,GA,GD,GE,GF,GG,GH,GI,GL,GM,GN,GP,GQ,GR,GT,GU,GW,GY,HK,HN,HR,HT,HU,ID,IE,IL,IM,IN,IO,IQ,IS,IT,JE,JM,JO,JP,KE,KG,KH,KI,KM,KN,KR,KW,KY,KZ,LA,LB,LC,LI,LK,LR,LS,LT,LU,LV,LY,MA,MC,MD,ME,MF,MG,MK,ML,MM,MN,MO,MQ,MR,MS,MT,MU,MV,MW,MX,MY,MZ,NA,NC,NE,NG,NI,NL,NO,NP,NR,NU,NZ,OM,PA,PE,PF,PG,PH,PK,PL,PM,PN,PR,PS,PT,PY,QA,RE,RO,RS,RW,SA,SB,SC,SD,SE,SG,SH,SI,SJ,SK,SL,SM,SN,SO,SR,SS,ST,SV,SX,SZ,TA,TC,TD,TG,TH,TJ,TK,TL,TM,TN,TO,TR,TT,TV,TW,TZ,UA,UG,US,UY,UZ,VA,VC,VE,VG,VN,VU,WF,WS,XK,YE,YT,ZA,ZM,ZW"
 
 # The Stripe secret key is NOT stored here. Set it once with:
 #   npx wrangler secret put STRIPE_SECRET_KEY

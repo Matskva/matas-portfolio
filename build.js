@@ -166,6 +166,9 @@ const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
    Leave empty until it's deployed: the cart still works, but its button says
    card checkout is coming soon and links to email instead. */
 const CHECKOUT_URL = "https://mat4s-checkout.mat4s.workers.dev";
+/* delivery shown in the cart, in pence — keep in step with checkout/wrangler.toml
+   (UK_SHIPPING_PENCE / INTL_SHIPPING_PENCE), which is what Stripe actually charges */
+const DELIVERY = { uk: 0, intl: 2000 };
 
 /** "£1,250" → 125000 (pence); anything else ("Price on request", "unavailable") → null */
 const pence = (p) => {
@@ -584,14 +587,20 @@ ${shopItems.length ? `<button class="cart-fab" type="button" aria-controls="cart
   <ul class="cart-items"></ul>
   <p class="cart-empty">Your cart is empty.</p>
   <div class="cart-foot">
+    <fieldset class="cart-region">
+      <legend>Delivering to</legend>
+      <label><input type="radio" name="cart-region" value="uk" checked> <span>UK</span></label>
+      <label><input type="radio" name="cart-region" value="intl"> <span>International</span></label>
+    </fieldset>
+    <div class="cart-row"><span>Delivery</span><span class="cart-ship">Free</span></div>
     <div class="cart-total"><span>Total</span><span class="cart-sum">£0</span></div>
-    <p class="cart-note">Shipping address is taken at checkout. Payment is handled securely by Stripe.</p>
+    <p class="cart-note">Your delivery address is taken at checkout. Payment is handled securely by Stripe.</p>
     <button class="cart-checkout" type="button">Checkout</button>
     <p class="cart-error" role="alert" hidden></p>
   </div>
 </aside>
 <div class="cart-scrim" hidden></div>
-<script>window.__CHECKOUT__ = ${JSON.stringify(CHECKOUT_URL)};</script>
+<script>window.__CHECKOUT__ = ${JSON.stringify(CHECKOUT_URL)}; window.__DELIVERY__ = ${JSON.stringify(DELIVERY)};</script>
 <script src="cart.js?v=${VER}"></script>` : ""}
 <script src="script.js?v=${VER}"></script>
 </body></html>`;

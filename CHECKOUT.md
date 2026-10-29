@@ -42,15 +42,26 @@ checkout coming soon** and can't be pressed.
    the Stripe dashboard (Test mode). Then repeat step 4's `secret put` with the
    live key.
 
+## Delivery
+
+In the cart the buyer chooses **Delivering to: UK** or **International**. UK
+delivery is free (creativehub's delivery is already inside the print price) and
+international is £20 per order. Stripe only accepts an address in the chosen
+region, so nobody can pay for UK delivery and ship abroad.
+
 ## Settings in `checkout/wrangler.toml`
 
 | Setting | What it does |
 | --- | --- |
-| `SHIP_COUNTRIES` | Countries a buyer can enter a delivery address in. Default `GB`. Add e.g. `GB,IE,FR,US`. |
-| `SHIPPING_PENCE` | A flat delivery charge per order in pence, e.g. `"1500"` for £15. Empty = no delivery charge. |
+| `UK_COUNTRIES` | Addresses accepted for UK delivery. `GB`. |
+| `UK_SHIPPING_PENCE` | UK delivery charge per order in pence. `0` = free. |
+| `INTL_COUNTRIES` | Addresses accepted for international delivery (worldwide minus GB and a few unshippable places). |
+| `INTL_SHIPPING_PENCE` | International delivery charge per order in pence. `2000` = £20. |
 | `ALLOWED_ORIGINS` | Sites allowed to use the worker. |
 
-Run `npx wrangler deploy` again after changing any of these.
+After changing a setting, run `npx wrangler deploy` in `checkout/`. If you
+change a delivery price, also change `DELIVERY` in `build.js` (what the cart
+shows) and run `node build.js`.
 
 ## After a sale
 

@@ -12,6 +12,18 @@
   if (!fab || !panel) return;
   const list = $(".cart-items", panel), empty = $(".cart-empty", panel);
   const sumEl = $(".cart-sum", panel), checkout = $(".cart-checkout", panel), err = $(".cart-error", panel);
+  const shipEl = $(".cart-ship", panel);
+  const DELIVERY = window.__DELIVERY__ || { uk: 0, intl: 0 };
+  const RKEY = "mat4s-region";
+  let region = (() => { try { return localStorage.getItem(RKEY) === "intl" ? "intl" : "uk"; } catch { return "uk"; } })();
+  panel.querySelectorAll('input[name="cart-region"]').forEach((r) => {
+    r.checked = r.value === region;
+    r.addEventListener("change", () => {
+      region = r.value === "intl" ? "intl" : "uk";
+      try { localStorage.setItem(RKEY, region); } catch {}
+      render();
+    });
+  });
 
   // what's buyable, read from the page's own buttons (ids, names, prices, limits)
   const catalogue = {};
@@ -26,7 +38,9 @@
   let cart = load().filter((l) => catalogue[l.id]).map((l) => ({ id: l.id, qty: Math.min(Math.max(1, l.qty | 0), catalogue[l.id].max) }));
 
   const gbp = (p) => "£" + (p / 100).toLocaleString("en-GB", { minimumFractionDigits: p % 100 ? 2 : 0, maximumFractionDigits: 2 });
-  const total = () => cart.reduce((s, l) => s + catalogue[l.id].amount * l.qty, 0);
+  const subtotal = () => cart.reduce((s, l) => s + catalogue[l.id].amount * l.qty, 0);
+  const shipping = () => (cart.length ? DELIVERY[region] || 0 : 0);
+  const total = () => subtotal() + shipping();
   const count = () => cart.reduce((s, l) => s + l.qty, 0);
 
   // total counts up/down to its new value
@@ -77,6 +91,7 @@
       b.classList.toggle("is-in", !!l);
       b.disabled = !!full;
     });
+    shipEl.textContent = shipping() ? gbp(shipping()) : "Free";
     if (!endpoint) {
       checkout.textContent = "Card checkout coming soon";
       checkout.disabled = true;
@@ -130,7 +145,7 @@
       const res = await fetch(endpoint + "/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart.map((l) => ({ id: l.id, qty: l.qty })) }),
+        body: JSON.stringify({ items: cart.map((l) => ({ id: l.id, qty: l.qty })), region }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.url) throw new Error(data.error || "Checkout is unavailable right now.");
