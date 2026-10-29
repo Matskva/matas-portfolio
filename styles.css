@@ -326,6 +326,18 @@ body.theme-blue .brand .dot { color: #fff; }
    exclusion blend); eyebrow, lede and links stay untouched */
 .gallery-overlay .hero-mark { mix-blend-mode: exclusion; }
 
+/* halftone.js prints the big Matas as dots on a canvas inside the h1, so the
+   exclusion blend above still applies; the DOM text stays for selection/SEO
+   but goes invisible once the canvas is ready (.is-halftone) */
+.gallery-overlay .hero-mark { position: relative; }
+.hero-mark .hm-base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+.hero-mark .hm-canvas { position: absolute; pointer-events: none; }
+.gallery-overlay .hero-mark.is-halftone,
+.gallery-overlay .hero-mark.is-halftone .dot {
+  -webkit-text-stroke-color: transparent; text-stroke-color: transparent;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
 /* desktop: slightly heavier outline on the big Matas */
 @media (min-width: 901px) {
   .gallery-overlay .hero-mark { -webkit-text-stroke-width: 2px; text-stroke-width: 2px; }

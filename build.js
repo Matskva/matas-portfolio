@@ -460,6 +460,7 @@ ${ld({
   <script>window.__MATAS_WORKS__ = ${JSON.stringify(galleryImages)};</script>
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
   <script type="module" src="gallery.js?v=${VER}"></script>
+  <script type="module" src="halftone.js?v=${VER}"></script>
 </body></html>`;
 
 /* ---- art.html --------------------------------------------------------- */
