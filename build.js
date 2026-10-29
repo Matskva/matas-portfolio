@@ -165,7 +165,7 @@ const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
    CHECKOUT_URL — the deployed worker, e.g. https://mat4s-checkout.<you>.workers.dev
    Leave empty until it's deployed: the cart still works, but its button says
    card checkout is coming soon and links to email instead. */
-const CHECKOUT_URL = "";
+const CHECKOUT_URL = "https://mat4s-checkout.mat4s.workers.dev";
 
 /** "£1,250" → 125000 (pence); anything else ("Price on request", "unavailable") → null */
 const pence = (p) => {
