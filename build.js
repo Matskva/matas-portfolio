@@ -252,6 +252,17 @@ const anyPrints = prints.some(isLive);
 /* everything that can go in the cart — written to shop.json for the worker */
 const shopItems = visible.flatMap((w) => printsFor(w).map((p) => printItem(w, p))).filter(Boolean);
 
+/* TEMPORARY £1 test item for checking real card payments end to end. Hidden on
+   the page unless opened as art.html?testpay — set to false (and rebuild) once
+   the test purchase is done and refunded. */
+const TEST_PAYMENT = true;
+const testItem = TEST_PAYMENT && {
+  id: "test-payment", kind: "test", num: "", max: 1,
+  name: "Test payment", detail: "Not a real order, will be refunded",
+  amount: 100, image: "icon-512.png",
+};
+if (testItem) shopItems.push(testItem);
+
 const allYears = visible.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
 
@@ -610,6 +621,7 @@ ${archivedWorks.length ? `
   <figure class="lightbox-figure"><img class="lightbox-img" alt=""><figcaption class="lightbox-cap"></figcaption></figure>
 </div>
 ${footer()}
+${testItem ? `<div class="test-pay" hidden><p>Test payment (£1, hidden from visitors)</p>${cartButton(testItem)}</div>` : ""}
 ${shopItems.length ? `<button class="cart-fab" type="button" aria-controls="cart" aria-expanded="false" hidden>
   <span>Cart</span> <span class="cart-count">0</span>
 </button>

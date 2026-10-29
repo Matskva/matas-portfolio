@@ -25,6 +25,10 @@
     });
   });
 
+  // the hidden £1 test item only shows on art.html?testpay
+  const testBox = $(".test-pay");
+  if (testBox && /[?&]testpay\b/.test(location.search)) testBox.hidden = false;
+
   // what's buyable, read from the page's own buttons (ids, names, prices, limits)
   const catalogue = {};
   document.querySelectorAll(".cart-add").forEach((b) => {
