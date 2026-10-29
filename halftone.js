@@ -51,12 +51,20 @@ function init(h1) {
     const cs = getComputedStyle(h1);
     const size = parseFloat(cs.fontSize);
     const hr = h1.getBoundingClientRect();
-    // text box of the word itself (glyph advances), and its baseline
+    // every letter's own box in the real headline, plus the text baseline
+    const glyphs = [];
+    const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
     const range = document.createRange();
-    range.setStart(h1, 0);
-    range.setEnd(h1, h1.childNodes.length - 2);              // up to (not incl.) our marker + canvas
-    const tr = range.getBoundingClientRect();
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      for (let i = 0; i < n.data.length; i++) {
+        if (!n.data[i].trim()) continue;
+        range.setStart(n, i); range.setEnd(n, i + 1);
+        const r = range.getBoundingClientRect();
+        glyphs.push({ ch: n.data[i], left: r.left, width: r.width });
+      }
+    }
     const baseY = base.getBoundingClientRect().bottom;
+    const ls = parseFloat(cs.letterSpacing) || 0;            // "normal" → 0; a box's width includes it
 
     const pad = size * PAD;
     ox = hr.left - pad; oy = hr.top - pad;                   // canvas origin in viewport px
@@ -70,19 +78,24 @@ function init(h1) {
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
 
-    // set the word on a 1x mask, stretched to the DOM's own width
+    // set each letter on a 1x mask exactly where the DOM puts it. Canvas can't
+    // ask for Archivo's 118% width (only keyword stretches), so each glyph is
+    // drawn at "expanded" (112.5%) and scaled to the DOM's own advance —
+    // same face, same weight, same letter spacing as the outlined headline.
     const mask = document.createElement("canvas");
     mask.width = w; mask.height = h;
     const m = mask.getContext("2d", { willReadFrequently: true });
     m.font = `${cs.fontWeight} ${size}px ${cs.fontFamily}`;
     if ("fontStretch" in m) m.fontStretch = "expanded";
-    const natural = m.measureText(word).width || 1;
-    m.save();
-    m.translate(tr.left - ox, baseY - oy);
-    m.scale(tr.width / natural, 1);
     m.textBaseline = "alphabetic";
-    m.fillText(word, 0, 0);
-    m.restore();
+    for (const g of glyphs) {
+      const natural = m.measureText(g.ch).width || 1;
+      m.save();
+      m.translate(g.left - ox, baseY - oy);
+      m.scale(Math.max(0.5, (g.width - ls) / natural), 1);
+      m.fillText(g.ch, 0, 0);
+      m.restore();
+    }
     const img = m.getImageData(0, 0, w, h).data;
 
     gap = Math.max(3, Math.min(7, size / 36));

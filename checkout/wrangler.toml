@@ -1,0 +1,14 @@
+name = "mat4s-checkout"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+SITE = "https://mat4s.com"
+ALLOWED_ORIGINS = "https://mat4s.com,https://www.mat4s.com,https://matskva.github.io"
+# Countries Stripe will take a delivery address for (ISO codes, comma separated)
+SHIP_COUNTRIES = "GB"
+# Flat delivery charge per order in pence, e.g. "1500" for £15. Empty = no charge.
+SHIPPING_PENCE = ""
+
+# The Stripe secret key is NOT stored here. Set it once with:
+#   npx wrangler secret put STRIPE_SECRET_KEY

@@ -155,6 +155,37 @@ const prints = [
 
 const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
 
+/* ---- cart + card checkout ----------------------------------------------
+   Originals with a £ price and prints with a numeric `price` get "Add to cart".
+   Checkout posts the cart (ids + quantities only) to the Cloudflare Worker in
+   checkout/, which re-prices everything from shop.json and opens Stripe
+   Checkout — so a price can't be tampered with in the browser.
+
+   CHECKOUT_URL — the deployed worker, e.g. https://mat4s-checkout.<you>.workers.dev
+   Leave empty until it's deployed: the cart still works, but its button says
+   card checkout is coming soon and links to email instead. */
+const CHECKOUT_URL = "";
+
+/** "£1,250" → 125000 (pence); anything else ("Price on request", "unavailable") → null */
+const pence = (p) => {
+  if (typeof p === "number") return Math.round(p * 100);
+  const m = /£\s*([\d,]+(?:\.\d{1,2})?)/.exec(p || "");
+  return m ? Math.round(parseFloat(m[1].replace(/,/g, "")) * 100) : null;
+};
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const originalItem = (w) => pence(w.price) && {
+  id: `original-${w.num}`, kind: "original", num: w.num, max: 1,
+  name: `Work ${w.num}, original`, detail: `${w.medium}, ${w.size}`,
+  amount: pence(w.price), image: A(w.img),
+};
+const printItem = (w, p) => typeof p.price === "number" && {
+  id: `print-${w.num}-${slug(p.size)}`, kind: "print", num: w.num, max: 10,
+  name: `Work ${w.num}, print`, detail: p.size,
+  amount: pence(p.price), image: A(w.img),
+};
+const gbp = (amount) => "£" + (amount / 100).toLocaleString("en-GB", { minimumFractionDigits: amount % 100 ? 2 : 0 });
+const cartButton = (it) => `<button class="cart-add" type="button" data-id="${it.id}" data-name="${it.name}" data-detail="${it.detail}" data-amount="${it.amount}" data-max="${it.max}" data-image="${it.image}">Add to cart</button>`;
+
 /* Two shape-matched print sizes per work, long edge 40cm then 60cm, keeping the
    painting's aspect ratio so nothing is cropped or floated in odd borders. */
 const PRINT_LONG_EDGES_CM = [40, 60];
@@ -173,6 +204,11 @@ const printsFor = (w) => {
   return listed.length ? listed : defaultPrintSizes(w);
 };
 const anyPrints = prints.some(isLive);
+/* everything that can go in the cart — written to shop.json for the worker */
+const shopItems = visible.flatMap((w) => [
+  w.price !== "unavailable" && originalItem(w),
+  ...printsFor(w).map((p) => printItem(w, p)),
+]).filter(Boolean);
 
 const allYears = visible.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
@@ -354,9 +390,13 @@ const footer = () => `<footer class="foot reveal">
   </div>
 </footer>`;
 
-const priceMarkup = (p) => p === "unavailable"
-  ? `<span class="price sold">Unavailable</span>`
-  : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
+const priceMarkup = (w) => {
+  if (w.price === "unavailable") return `<span class="price sold">Unavailable</span>`;
+  const it = originalItem(w);
+  return it
+    ? `<span class="buy-line"><span class="price">${gbp(it.amount)}</span>${cartButton(it)}</span>`
+    : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
+};
 
 /* one catalogue entry. h3 because the Available/Archive group headings are h2. */
 const pieceMarkup = (w) => `<article class="piece reveal">
@@ -372,10 +412,14 @@ const pieceMarkup = (w) => `<article class="piece reveal">
             <dt>Dimensions</dt><dd>${w.size}</dd>
             <dt>Medium</dt><dd>${w.medium}</dd>
             <dt>Year</dt><dd>${w.year}</dd>
-            <dt>Original</dt><dd>${priceMarkup(w.price)}</dd>${printsFor(w).length ? `
-            <dt>Prints</dt><dd class="print-opts">${printsFor(w).map((p) => isLive(p)
-              ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
-              : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`).join("")}</dd>` : ""}
+            <dt>Original</dt><dd>${priceMarkup(w)}</dd>${printsFor(w).length ? `
+            <dt>Prints</dt><dd class="print-opts">${printsFor(w).map((p) => {
+              const it = printItem(w, p);
+              if (it) return `<span class="buy-line"><span class="print-size">${p.size}</span> <span class="print-price">${gbp(it.amount)}</span>${cartButton(it)}</span>`;
+              return isLive(p)
+                ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
+                : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`;
+            }).join("")}</dd>` : ""}
           </dl>
         </div>
       </article>`;
@@ -528,6 +572,24 @@ ${archivedWorks.length ? `
   <figure class="lightbox-figure"><img class="lightbox-img" alt=""><figcaption class="lightbox-cap"></figcaption></figure>
 </div>
 ${footer()}
+${shopItems.length ? `<button class="cart-fab" type="button" aria-controls="cart" aria-expanded="false" hidden>
+  <span>Cart</span> <span class="cart-count">0</span>
+</button>
+<aside class="cart" id="cart" aria-label="Your cart" aria-hidden="true">
+  <div class="cart-head"><h2>Cart <span class="cart-count">0</span></h2>
+    <button class="cart-close" type="button" aria-label="Close cart">&times;</button></div>
+  <ul class="cart-items"></ul>
+  <p class="cart-empty">Your cart is empty.</p>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><span class="cart-sum">£0</span></div>
+    <p class="cart-note">Shipping address is taken at checkout. Payment is handled securely by Stripe.</p>
+    <button class="cart-checkout" type="button">Checkout</button>
+    <p class="cart-error" role="alert" hidden></p>
+  </div>
+</aside>
+<div class="cart-scrim" hidden></div>
+<script>window.__CHECKOUT__ = ${JSON.stringify(CHECKOUT_URL)};</script>
+<script src="cart.js?v=${VER}"></script>` : ""}
 <script src="script.js?v=${VER}"></script>
 </body></html>`;
 
@@ -568,6 +630,8 @@ ${footer()}
 
 fs.writeFileSync(path.join(__dirname, "index.html"), indexHTML);
 fs.writeFileSync(path.join(__dirname, "art.html"), artHTML);
+/* the checkout worker prices every order from this file, never from the browser */
+fs.writeFileSync(path.join(__dirname, "shop.json"), JSON.stringify({ currency: "gbp", items: shopItems }, null, 2) + "\n");
 if (SHOW_PROJECTS) {
   fs.writeFileSync(path.join(__dirname, "projects.html"), projectsHTML);
 } else {
