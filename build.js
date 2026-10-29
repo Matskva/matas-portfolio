@@ -156,7 +156,8 @@ const prints = [
 const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
 
 /* ---- cart + card checkout ----------------------------------------------
-   Originals with a £ price and prints with a numeric `price` get "Add to cart".
+   Only prints are sold online: a print with a numeric `price` gets "Add to cart".
+   Originals always stay "Contact me" (sold by conversation, not by card).
    Checkout posts the cart (ids + quantities only) to the Cloudflare Worker in
    checkout/, which re-prices everything from shop.json and opens Stripe
    Checkout — so a price can't be tampered with in the browser.
@@ -173,11 +174,6 @@ const pence = (p) => {
   return m ? Math.round(parseFloat(m[1].replace(/,/g, "")) * 100) : null;
 };
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const originalItem = (w) => pence(w.price) && {
-  id: `original-${w.num}`, kind: "original", num: w.num, max: 1,
-  name: `Work ${w.num}, original`, detail: `${w.medium}, ${w.size}`,
-  amount: pence(w.price), image: A(w.img),
-};
 const printItem = (w, p) => typeof p.price === "number" && {
   id: `print-${w.num}-${slug(p.size)}`, kind: "print", num: w.num, max: 10,
   name: `Work ${w.num}, print`, detail: p.size,
@@ -205,10 +201,7 @@ const printsFor = (w) => {
 };
 const anyPrints = prints.some(isLive);
 /* everything that can go in the cart — written to shop.json for the worker */
-const shopItems = visible.flatMap((w) => [
-  w.price !== "unavailable" && originalItem(w),
-  ...printsFor(w).map((p) => printItem(w, p)),
-]).filter(Boolean);
+const shopItems = visible.flatMap((w) => printsFor(w).map((p) => printItem(w, p))).filter(Boolean);
 
 const allYears = visible.map((w) => +w.year);
 const yearSpan = `${Math.min(...allYears)} to ${Math.max(...allYears)}`;
@@ -390,13 +383,9 @@ const footer = () => `<footer class="foot reveal">
   </div>
 </footer>`;
 
-const priceMarkup = (w) => {
-  if (w.price === "unavailable") return `<span class="price sold">Unavailable</span>`;
-  const it = originalItem(w);
-  return it
-    ? `<span class="buy-line"><span class="price">${gbp(it.amount)}</span>${cartButton(it)}</span>`
-    : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
-};
+const priceMarkup = (w) => w.price === "unavailable"
+  ? `<span class="price sold">Unavailable</span>`
+  : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
 
 /* one catalogue entry. h3 because the Available/Archive group headings are h2. */
 const pieceMarkup = (w) => `<article class="piece reveal">

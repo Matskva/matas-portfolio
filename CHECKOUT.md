@@ -1,15 +1,16 @@
 # Card checkout — setup
 
-The paintings page has a cart. Originals with a £ price and prints with a
-`price` get an **Add to cart** button. **Checkout** sends the cart (ids and
+The paintings page has a cart for **prints only**. Originals always show
+**Contact me** and are sold by conversation. A print with a `price` gets an
+**Add to cart** button. **Checkout** sends the cart (ids and
 quantities only) to a small Cloudflare Worker in `checkout/`. The worker looks
 every price up in the published `shop.json`, creates a Stripe Checkout
 Session, and sends the buyer to Stripe's own secure payment page. Card details
 never touch this site.
 
-Until the worker is deployed and `CHECKOUT_URL` is set in `build.js`, the cart
-still works, but its button reads **Card checkout coming soon** and can't be
-pressed.
+The cart only appears once at least one print has a price. Until the worker is
+deployed and `CHECKOUT_URL` is set in `build.js`, its button reads **Card
+checkout coming soon** and can't be pressed.
 
 ---
 
@@ -53,16 +54,11 @@ Run `npx wrangler deploy` again after changing any of these.
 
 ## After a sale
 
-- **Originals are one-offs.** The worker won't sell more than one of an original
-  per order, but it doesn't know when one has sold. After a sale, set that work's
-  `price` to `"unavailable"` in `build.js`, run `node build.js` and push. This
-  removes it from the cart and from `shop.json`, so it can't be bought again.
 - **Prints:** order from creativehub by hand, as in `PRINTS.md`. The Stripe
   payment shows what was bought under **Metadata → order**.
 
 ## Adding prices
 
-- **An original:** set `price: "£950"` on the work in `build.js`.
 - **A print:** add an entry to `prints` in `build.js`, e.g.
   `{ num: "011", size: "40 × 40 cm", price: 95 }`. A print with a price gets an
   Add to cart button; one without stays "Coming soon".
