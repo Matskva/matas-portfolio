@@ -195,9 +195,23 @@ const defaultPrintSizes = (w) => {
   });
 };
 
+/* ESTIMATED print prices (GBP), by print area, until real creativehub costs are
+   in — then replace with per-print `price`s in `prints` above (those win).
+   Rough basis: creativehub giclée incl. UK delivery ≈ £25–55, so each tier keeps
+   a healthy margin after Stripe's 1.5% + 20p. Only works in the Available
+   section get these; archived works' prints stay "Coming soon". */
+const ESTIMATED_PRINT_PRICES = [[1100, 65], [1700, 85], [2600, 125], [Infinity, 150]];   // [max cm², £]
+const estimatePrice = (size) => {
+  const m = /([\d.]+)\s*×\s*([\d.]+)/.exec(size);
+  const area = m ? parseFloat(m[1]) * parseFloat(m[2]) : Infinity;
+  return ESTIMATED_PRINT_PRICES.find(([max]) => area <= max)[1];
+};
+
 const printsFor = (w) => {
   const listed = prints.filter((p) => p.num === w.num);
-  return listed.length ? listed : defaultPrintSizes(w);
+  if (listed.length) return listed;
+  const sizes = defaultPrintSizes(w);
+  return isArchived(w) ? sizes : sizes.map((p) => ({ ...p, price: estimatePrice(p.size) }));
 };
 const anyPrints = prints.some(isLive);
 /* everything that can go in the cart — written to shop.json for the worker */
