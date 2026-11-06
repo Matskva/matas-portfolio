@@ -1083,3 +1083,13 @@ body:not(.theme-blue) [data-words].in .wi.dim { color: rgba(20,20,20,0.4); }
   padding: 10px 14px; background: #fff3c4; border: 1px solid #e5c95c; border-radius: 2px; font-size: 13px; }
 .test-pay[hidden] { display: none; }
 .test-pay p { margin: 0; }
+.print-finish { color: var(--muted); font-size: 12px; margin-left: 4px; }
+/* one tidy row per print option: size + finish | price | add */
+.print-opts .buy-line { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 6px 14px; width: 100%; padding: 4px 0; border-bottom: 1px solid var(--line-soft); }
+.print-opts .buy-line:last-child { border-bottom: 0; }
+.print-opts .print-size { white-space: nowrap; }
+.print-opts .cart-add { padding: 3px 8px; font-size: 10px; }
+@media (max-width: 420px) {
+  .print-opts .buy-line { grid-template-columns: 1fr auto; }
+  .print-opts .cart-add { grid-column: 1 / -1; justify-self: start; }
+}

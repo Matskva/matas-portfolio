@@ -2,43 +2,73 @@
   "currency": "gbp",
   "items": [
     {
-      "id": "print-014-30-30-cm",
+      "id": "print-014-30-30-cm-print-only",
       "kind": "print",
       "num": "014",
       "max": 10,
       "name": "Work 014, print",
-      "detail": "30 × 30 cm",
-      "amount": 6500,
+      "detail": "30 × 30 cm, print only",
+      "amount": 8900,
       "image": "assets/img-new-07.jpg"
     },
     {
-      "id": "print-014-40-40-cm",
+      "id": "print-014-30-30-cm-black-frame",
       "kind": "print",
       "num": "014",
       "max": 10,
-      "name": "Work 014, print",
-      "detail": "40 × 40 cm",
-      "amount": 8500,
+      "name": "Work 014, framed print",
+      "detail": "30 × 30 cm, black frame",
+      "amount": 16400,
       "image": "assets/img-new-07.jpg"
     },
     {
-      "id": "print-014-50-50-cm",
+      "id": "print-014-40-40-cm-print-only",
       "kind": "print",
       "num": "014",
       "max": 10,
       "name": "Work 014, print",
-      "detail": "50 × 50 cm",
-      "amount": 12500,
+      "detail": "40 × 40 cm, print only",
+      "amount": 14900,
       "image": "assets/img-new-07.jpg"
     },
     {
-      "id": "print-014-70-70-cm",
+      "id": "print-014-40-40-cm-black-frame",
+      "kind": "print",
+      "num": "014",
+      "max": 10,
+      "name": "Work 014, framed print",
+      "detail": "40 × 40 cm, black frame",
+      "amount": 22400,
+      "image": "assets/img-new-07.jpg"
+    },
+    {
+      "id": "print-014-50-50-cm-print-only",
       "kind": "print",
       "num": "014",
       "max": 10,
       "name": "Work 014, print",
-      "detail": "70 × 70 cm",
-      "amount": 19500,
+      "detail": "50 × 50 cm, print only",
+      "amount": 24900,
+      "image": "assets/img-new-07.jpg"
+    },
+    {
+      "id": "print-014-50-50-cm-black-frame",
+      "kind": "print",
+      "num": "014",
+      "max": 10,
+      "name": "Work 014, framed print",
+      "detail": "50 × 50 cm, black frame",
+      "amount": 32400,
+      "image": "assets/img-new-07.jpg"
+    },
+    {
+      "id": "print-014-70-70-cm-print-only",
+      "kind": "print",
+      "num": "014",
+      "max": 10,
+      "name": "Work 014, print",
+      "detail": "70 × 70 cm, print only",
+      "amount": 39900,
       "image": "assets/img-new-07.jpg"
     }
   ]

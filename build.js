@@ -184,10 +184,14 @@ const prints = [
   // { num: "011", size: "40 × 40 cm", price: 95 },
   // Only works listed here sell prints. Sizes are the ones creativehub fulfils;
   // an entry without a price uses the estimate below until real costs are in.
-  { num: "014", size: "30 × 30 cm" },
-  { num: "014", size: "40 × 40 cm" },
-  { num: "014", size: "50 × 50 cm" },
-  { num: "014", size: "70 × 70 cm" },
+  // `finish` (optional) is shown after the size and kept apart in the order id.
+  { num: "014", size: "30 × 30 cm", finish: "Print only",  price: 89 },
+  { num: "014", size: "30 × 30 cm", finish: "Black frame", price: 164 },
+  { num: "014", size: "40 × 40 cm", finish: "Print only",  price: 149 },
+  { num: "014", size: "40 × 40 cm", finish: "Black frame", price: 224 },
+  { num: "014", size: "50 × 50 cm", finish: "Print only",  price: 249 },
+  { num: "014", size: "50 × 50 cm", finish: "Black frame", price: 324 },
+  { num: "014", size: "70 × 70 cm", finish: "Print only",  price: 399 },
 ];
 
 const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
@@ -215,8 +219,8 @@ const pence = (p) => {
 };
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const printItem = (w, p) => typeof p.price === "number" && {
-  id: `print-${w.num}-${slug(p.size)}`, kind: "print", num: w.num, max: 10,
-  name: `Work ${w.num}, print`, detail: p.size,
+  id: `print-${w.num}-${slug(p.size)}${p.finish ? "-" + slug(p.finish) : ""}`, kind: "print", num: w.num, max: 10,
+  name: `Work ${w.num}, ${p.finish === "Black frame" ? "framed print" : "print"}`, detail: p.finish ? `${p.size}, ${p.finish.toLowerCase()}` : p.size,
   amount: pence(p.price), image: A(w.img),
 };
 const gbp = (amount) => "£" + (amount / 100).toLocaleString("en-GB", { minimumFractionDigits: amount % 100 ? 2 : 0 });
@@ -468,7 +472,7 @@ const pieceMarkup = (w) => `<article class="piece reveal">
             <dt>Original</dt><dd>${priceMarkup(w)}</dd>${printsFor(w).length ? `
             <dt>Prints</dt><dd class="print-opts">${printsFor(w).map((p) => {
               const it = printItem(w, p);
-              if (it) return `<span class="buy-line"><span class="print-size">${p.size}</span> <span class="print-price">${gbp(it.amount)}</span>${cartButton(it)}</span>`;
+              if (it) return `<span class="buy-line"><span class="print-size">${p.size}${p.finish ? ` <span class="print-finish">${p.finish}</span>` : ""}</span> <span class="print-price">${gbp(it.amount)}</span>${cartButton(it)}</span>`;
               return isLive(p)
                 ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
                 : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`;
