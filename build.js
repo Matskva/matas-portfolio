@@ -455,6 +455,25 @@ const priceMarkup = (w) => w.price === "unavailable"
   ? `<span class="price sold">Unavailable</span>`
   : `<a class="price avail" href="mailto:matas@mail.com">Contact me</a>`;
 
+/* the Prints row: a "Buy print" dropdown (a native <details>, so it works with
+   keyboard and screen readers and without JS) holding one row per option */
+const printLine = (w, p) => {
+  const it = printItem(w, p);
+  if (it) return `<span class="buy-line"><span class="print-size">${p.size}${p.finish ? ` <span class="print-finish">${p.finish}</span>` : ""}</span> <span class="print-price">${gbp(it.amount)}</span>${cartButton(it)}</span>`;
+  return isLive(p)
+    ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
+    : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`;
+};
+const printMenu = (w) => {
+  const ps = printsFor(w);
+  const amounts = ps.map((p) => printItem(w, p)).filter(Boolean).map((it) => it.amount);
+  const from = amounts.length ? ` <span class="print-from">from ${gbp(Math.min(...amounts))}</span>` : "";
+  return `<details class="print-menu">
+              <summary><span class="print-menu-label">Buy print</span>${from}<span class="print-chev" aria-hidden="true"></span></summary>
+              <div class="print-opts">${ps.map((p) => printLine(w, p)).join("")}</div>
+            </details>`;
+};
+
 /* one catalogue entry. h3 because the Available/Archive group headings are h2. */
 const pieceMarkup = (w) => `<article class="piece reveal">
         <figure class="piece-media">
@@ -470,13 +489,7 @@ const pieceMarkup = (w) => `<article class="piece reveal">
             <dt>Medium</dt><dd>${w.medium}</dd>
             <dt>Year</dt><dd>${w.year}</dd>
             <dt>Original</dt><dd>${priceMarkup(w)}</dd>${printsFor(w).length ? `
-            <dt>Prints</dt><dd class="print-opts">${printsFor(w).map((p) => {
-              const it = printItem(w, p);
-              if (it) return `<span class="buy-line"><span class="print-size">${p.size}${p.finish ? ` <span class="print-finish">${p.finish}</span>` : ""}</span> <span class="print-price">${gbp(it.amount)}</span>${cartButton(it)}</span>`;
-              return isLive(p)
-                ? `<a class="print-buy" href="${p.url}">${p.size}${p.price ? ` <span class="print-price">£${p.price}</span>` : ""}</a>`
-                : `<span class="print-soon">${p.size} <span class="print-soon-tag">Coming soon</span></span>`;
-            }).join("")}</dd>` : ""}
+            <dt>Prints</dt><dd>${printMenu(w)}</dd>` : ""}
           </dl>
         </div>
       </article>`;

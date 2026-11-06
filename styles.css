@@ -1093,3 +1093,30 @@ body:not(.theme-blue) [data-words].in .wi.dim { color: rgba(20,20,20,0.4); }
   .print-opts .buy-line { grid-template-columns: 1fr auto; }
   .print-opts .cart-add { grid-column: 1 / -1; justify-self: start; }
 }
+
+/* "Buy print" dropdown on the catalogue (014) */
+.print-menu { width: 100%; }
+.print-menu > summary {
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--display); font-weight: 600; font-stretch: 108%; font-size: 11px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: #fff; background: var(--accent);
+  border-radius: 2px; padding: 8px 12px; user-select: none;
+  transition: background 0.25s var(--ease);
+}
+.print-menu > summary::-webkit-details-marker { display: none; }
+.print-menu > summary:hover { background: var(--blue-deep); }
+.print-menu > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.print-from { font-weight: 500; letter-spacing: 0.06em; text-transform: none; font-size: 12px; opacity: 0.85; }
+.print-chev { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform 0.25s var(--ease); }
+.print-menu[open] > summary .print-chev { transform: translateY(2px) rotate(-135deg); }
+.print-menu .print-opts {
+  margin-top: 10px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 2px; background: var(--paper);
+  animation: print-menu-in 0.25s var(--ease);
+}
+@keyframes print-menu-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) { .print-menu .print-opts { animation: none; } .print-chev { transition: none; } }
+.print-menu .buy-line { grid-template-columns: minmax(0, 1fr) auto auto; }
+.print-menu .print-size { white-space: normal; }
+.print-menu .print-finish { white-space: nowrap; }
+.print-menu .cart-add { white-space: nowrap; }
