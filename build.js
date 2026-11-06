@@ -181,7 +181,13 @@ const archivedWorks = catalogue.filter(isArchived);
    painting's own proportions (see defaultPrintSizes), so every work shows a
    correctly-shaped print option without 30-odd lines of hand-written sizes.  */
 const prints = [
-  // { num: "011", size: "40 × 40 cm", price: 95, url: "https://buy.stripe.com/…" },
+  // { num: "011", size: "40 × 40 cm", price: 95 },
+  // Only works listed here sell prints. Sizes are the ones creativehub fulfils;
+  // an entry without a price uses the estimate below until real costs are in.
+  { num: "014", size: "30 × 30 cm" },
+  { num: "014", size: "40 × 40 cm" },
+  { num: "014", size: "50 × 50 cm" },
+  { num: "014", size: "70 × 70 cm" },
 ];
 
 const isLive = (p) => !!p.url && !/…|\.\.\./.test(p.url);
@@ -234,20 +240,18 @@ const defaultPrintSizes = (w) => {
    Rough basis: creativehub giclée incl. UK delivery ≈ £25–55, so each tier keeps
    a healthy margin after Stripe's 1.5% + 20p. Only works in the Available
    section get these; archived works' prints stay "Coming soon". */
-const ESTIMATED_PRINT_PRICES = [[1100, 65], [1700, 85], [2600, 125], [Infinity, 150]];   // [max cm², £]
+const ESTIMATED_PRINT_PRICES = [[1100, 65], [1700, 85], [2600, 125], [3700, 150], [Infinity, 195]];   // [max cm², £]
 const estimatePrice = (size) => {
   const m = /([\d.]+)\s*×\s*([\d.]+)/.exec(size);
   const area = m ? parseFloat(m[1]) * parseFloat(m[2]) : Infinity;
   return ESTIMATED_PRINT_PRICES.find(([max]) => area <= max)[1];
 };
 
-const printsFor = (w) => {
-  const listed = prints.filter((p) => p.num === w.num);
-  if (isArchived(w)) return [];
-  if (listed.length) return listed;
-  const sizes = defaultPrintSizes(w);
-  return isArchived(w) ? [] : sizes.map((p) => ({ ...p, price: estimatePrice(p.size) }));   // archived: no prints row
-};
+/* prints are offered only for works listed in `prints` (and never for archived
+   ones); everything else shows no prints row at all */
+const printsFor = (w) => isArchived(w) ? [] : prints
+  .filter((p) => p.num === w.num)
+  .map((p) => (typeof p.price === "number" || isLive(p) ? p : { ...p, price: estimatePrice(p.size) }));
 const anyPrints = prints.some(isLive);
 /* everything that can go in the cart — written to shop.json for the worker */
 const shopItems = visible.flatMap((w) => printsFor(w).map((p) => printItem(w, p))).filter(Boolean);

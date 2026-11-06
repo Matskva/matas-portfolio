@@ -71,7 +71,8 @@ shows) and run `node build.js`.
 ## Adding prices
 
 - **A print:** add an entry to `prints` in `build.js`, e.g.
-  `{ num: "011", size: "40 × 40 cm", price: 95 }`. A print with a price gets an
-  Add to cart button; one without stays "Coming soon".
+  `{ num: "011", size: "40 × 40 cm", price: 95 }`. Only works listed in `prints`
+  show a prints row. An entry without a `price` uses the estimated price for its
+  size (`ESTIMATED_PRINT_PRICES`) until you set a real one.
 
 Then `node build.js` and push. `shop.json` updates automatically.
