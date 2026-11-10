@@ -425,7 +425,7 @@ const ld = (obj) => `<script type="application/ld+json">${JSON.stringify(obj)}</
 const header = (page) => `<header class="site-head${page==="home"?" autohide":""}">
   <a class="brand" href="index.html">${page==="art"?"Fine art":"Matas"}<span class="dot">.</span></a>
   <nav class="nav" aria-label="Primary">
-    <a href="art.html"${page==="art"?' aria-current="page"':""}>Fine&nbsp;Art</a>
+    ${page==="art"?"":`<a href="art.html">Fine&nbsp;Art</a>`}
     ${SHOW_PROJECTS?`<a href="projects.html"${page==="projects"?' aria-current="page"':""}>Projects</a>`:""}
     <a href="mailto:matas@mail.com">Contact</a>
     ${page==="art"||page==="projects"?'<a href="index.html">Back</a>':""}
