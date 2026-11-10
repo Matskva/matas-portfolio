@@ -423,7 +423,7 @@ const artworkLD = (w) => ({
 const ld = (obj) => `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
 
 const header = (page) => `<header class="site-head${page==="home"?" autohide":""}">
-  <a class="brand" href="index.html">Matas<span class="dot">.</span></a>
+  <a class="brand" href="index.html">${page==="art"?"Fine art":"Matas"}<span class="dot">.</span></a>
   <nav class="nav" aria-label="Primary">
     <a href="art.html"${page==="art"?' aria-current="page"':""}>Fine&nbsp;Art</a>
     ${SHOW_PROJECTS?`<a href="projects.html"${page==="projects"?' aria-current="page"':""}>Projects</a>`:""}
@@ -608,7 +608,7 @@ ${header("art")}
   <section class="gallery-intro">
     <div class="wrap">
       <p class="eyebrow load l1">The catalogue · ${yearSpan}</p>
-      <h1 class="load l2">Fine art<span class="dot">.</span><span class="sr-only"> — ${visible.length} original paintings by Matas, London</span></h1>
+      <h1 class="load l2">Matas<span class="dot">.</span><span class="sr-only"> — fine art catalogue, ${visible.length} original paintings, London</span></h1>
       <p class="sub load l3">Original expressionist paintings, on canvas, oil and banknote, circling identity, corruption, money and the slow erosion of the self.</p>
       <div class="gallery-count load l4">
         <span><b>${visible.length}</b> works</span>
